@@ -7,7 +7,7 @@ const routes = [
       {
         path: '',
         name: 'bienvenido',
-        component: () => import('src/modules/bienvenido/pages/BienvenidoPage.vue'),
+        component: () => import('src/modules/home/pages/BienvenidoPage.vue'),
       },
       {
         path: 'login',

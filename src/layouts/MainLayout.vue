@@ -8,7 +8,7 @@
           <div class="row items-center">
             <q-toolbar-title class="text-weight-bold text-h5">PayFlow</q-toolbar-title>
           </div>
-          <q-img src="/img/logo-payflow.png" style="height: 50px; width: auto" />
+          <q-img src="/assets/logo-payflow.png" style="height: 50px; width: auto" />
         </q-toolbar>
 
         <!-- Menú de navegación -->
