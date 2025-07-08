@@ -1,44 +1,50 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
+    <!-- CABECERA -->
+    <q-header elevated class="bg-indigo-10 text-white">
+      <div class="column">
+        <!-- Barra superior -->
+        <q-toolbar class="q-gutter-md row items-center justify-between" style="height: 60px">
+          <div class="row items-center">
+            <q-toolbar-title class="text-weight-bold text-h5">PayFlow</q-toolbar-title>
+          </div>
+          <q-img src="/img/logo-payflow.png" style="height: 50px; width: auto" />
+        </q-toolbar>
+
+        <!-- Menú de navegación -->
+        <q-tabs
           dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+          align="right"
+          active-color="white"
+          indicator-color="white"
+          narrow-indicator
+          class="bg-primary text-white shadow-2 q-px-md"
+        >
+          <!-- Acceso general -->
+          <q-route-tab to="/" label="Inicio" icon="home" />
+          <q-route-tab to="/deposito" label="Depósito" icon="account_balance_wallet" />
+          <q-route-tab to="/retiro" label="Retiro" icon="payments" />
+          <q-route-tab to="/historial" label="Historial" icon="history" />
+          <q-route-tab to="/notificaciones">
+            <q-badge floating color="red" v-if="nuevasNotificaciones > 0" align="top right">
+              {{ nuevasNotificaciones }}
+            </q-badge>
+            <q-icon name="notifications" />
+            <span class="q-tab__label">Notificaciones</span>
+          </q-route-tab>
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+          <!-- Acceso exclusivo para ADMIN -->
+          <q-route-tab v-if="isAdmin" to="/validaciones" label="Validaciones" icon="assignment" />
+          <q-route-tab v-if="isAdmin" to="/mantenimiento" label="Mantenimiento" icon="build" />
+          <q-route-tab v-if="isAdmin" to="/reportes" label="Reportes" icon="bar_chart" />
 
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
+          <!-- Logout -->
+          <q-route-tab to="/logout" label="Cerrar sesión" icon="logout" />
+        </q-tabs>
+      </div>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
-
+    <!-- Vista dinámica de páginas -->
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -46,57 +52,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+import { computed } from 'vue'
+import { useAuthStore } from 'src/modules/auth/store'
+import { useNotificacionesStore } from 'src/modules/notificaciones/store'
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
+const auth = useAuthStore()
+const notificaciones = useNotificacionesStore()
 
-const leftDrawerOpen = ref(false)
+const isAdmin = computed(() => auth.user?.role === 'admin')
 
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
+// Cuenta las notificaciones no leídas
+const nuevasNotificaciones = computed(() => notificaciones.lista.filter((n) => !n.leido).length)
 </script>
