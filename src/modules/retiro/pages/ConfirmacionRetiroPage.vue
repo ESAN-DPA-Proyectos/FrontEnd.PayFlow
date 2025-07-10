@@ -1,9 +1,14 @@
 <template>
-  <q-page class="q-pa-lg bg-grey-1">
-    <div class="row justify-center">
-      <div class="column items-center" style="width: 100%">
-        <div class="text-h5 q-mb-lg q-mt-xl">Confirmar Solicitud de Retiro</div>
-        <q-card flat bordered class="q-pa-lg" style="max-width: 420px; width: 100%">
+  <q-page class="payflow-success-page q-pa-md bg-grey-1" style="min-height: calc(100vh - 120px)">
+    <div class="row justify-center q-pt-lg">
+      <div class="column items-center" style="width: 100%; max-width: 600px">
+        <div class="payflow-section-title q-mb-xl q-mt-md">Confirmar Solicitud de Retiro</div>
+        <q-card
+          flat
+          bordered
+          class="payflow-card-interactive q-pa-lg shadow-2"
+          style="max-width: 480px; width: 100%"
+          >>
           <q-card-section>
             <div class="text-subtitle1 text-bold">Resumen de la operación</div>
             <div class="q-mb-md">Verifica los detalles antes de confirmar</div>
@@ -57,3 +62,12 @@ function confirmar() {
   router.push({ name: 'retiro-exito' })
 }
 </script>
+
+<style scoped>
+@media (max-width: 600px) {
+  .q-card {
+    margin: 0 16px;
+    max-width: calc(100vw - 32px) !important;
+  }
+}
+</style>
