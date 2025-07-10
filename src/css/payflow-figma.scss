@@ -1,0 +1,97 @@
+// Colores y estilos globales para PayFlow
+$color-header-bg: #0a234b;
+$color-navbar-bg: #0048bd;
+$color-header-text: #e3f2fd;
+$color-shadow: 0 4px 16px 0 rgba(10, 35, 75, 0.12);
+$font-family-main: 'Inter', 'Roboto', Arial, sans-serif;
+
+body {
+  font-family: $font-family-main;
+}
+
+.header-payflow {
+  background: $color-header-bg;
+  color: $color-header-text;
+  box-shadow: $color-shadow;
+  height: 116px;
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+}
+
+.navbar-payflow {
+  background: $color-navbar-bg;
+  color: $color-header-text;
+  box-shadow: $color-shadow;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+}
+
+.payflow-title {
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.payflow-welcome {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: $color-header-text;
+}
+
+.payflow-tabs {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: $color-header-text;
+}
+
+.payflow-shadow {
+  box-shadow: $color-shadow;
+}
+
+// Página de Retiro
+.retiro-container {
+  display: flex;
+  gap: 32px;
+  margin-top: 32px;
+}
+
+.retiro-info,
+.retiro-form {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: $color-shadow;
+  padding: 32px 24px;
+  flex: 1;
+}
+
+.retiro-info {
+  max-width: 340px;
+}
+
+.retiro-form {
+  flex: 2;
+}
+
+.retiro-label {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.retiro-btns {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.retiro-btn-cancelar {
+  background: #e0e0e0;
+  color: #888;
+}
+
+.retiro-btn-continuar {
+  background: $color-navbar-bg;
+  color: #fff;
+}
