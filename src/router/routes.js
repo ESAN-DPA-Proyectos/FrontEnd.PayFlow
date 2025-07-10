@@ -5,11 +5,6 @@ const routes = [
     component: () => import('src/layouts/AuthLayout.vue'),
     children: [
       {
-        path: '',
-        name: 'bienvenido',
-        component: () => import('src/modules/home/pages/BienvenidoPage.vue'),
-      },
-      {
         path: 'login',
         name: 'login',
         component: () => import('src/modules/auth/pages/LoginPage.vue'),
