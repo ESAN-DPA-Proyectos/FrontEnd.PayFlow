@@ -5,7 +5,11 @@
       <q-input label="Monto (S/)" type="number" filled class="q-mb-md" />
       <q-input label="Referencia del voucher" filled class="q-mb-md" />
       <q-uploader label="Subir imagen del voucher" url="#" auto-expand class="q-mb-md" />
-      <q-btn label="Confirmar Depósito" color="primary" />
+      <div class="q-pa-md flex flex-center">
+        <div>
+          <BtnPayflow label="Confirmar Depósito" />
+        </div>
+      </div>
     </q-form>
   </q-page>
 </template>
@@ -15,3 +19,5 @@ export default {
   name: 'DepositoPage',
 }
 </script>
+
+<style scoped></style>
