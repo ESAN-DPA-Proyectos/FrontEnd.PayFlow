@@ -17,15 +17,16 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-//import { useAuthStore } from 'src/modules/auth/store'
+import { useAuthStore } from 'src/modules/auth/store'
 
 const email = ref('')
 const password = ref('')
 const router = useRouter()
-//const auth = useAuthStore()
+const auth = useAuthStore()
 
 function login() {
-  // No se valida nada, es solo para pruebas visuales
+  // Simula login con cualquier credencial
+  auth.loginSimulado(email.value)
   router.push({ name: 'home' })
 }
 </script>
