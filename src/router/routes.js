@@ -81,7 +81,7 @@ const routes = [
   {
     path: '/:catchAll(.*)*',
     name: 'error404',
-    component: () => import('src/pages/ErrorNotFound.vue'),
+    component: () => import('src/modules/common/pages/ErrorNotFound.vue'),
   },
 ]
 
