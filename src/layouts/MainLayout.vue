@@ -52,15 +52,18 @@
       </div>
     </div>
     <!-- Menú de navegación -->
-    <div class="navbar-payflow">
+    <div
+      class="navbar-payflow"
+      style="width: 100%; display: flex; justify-content: flex-end; background: #0656b6"
+    >
       <q-tabs
         dense
-        align="left"
+        align="right"
         active-color="white"
         indicator-color="white"
         narrow-indicator
         class="payflow-tabs"
-        style="margin-left: 0"
+        style="margin-right: 32px; min-width: 700px; justify-content: flex-end"
       >
         <q-route-tab to="/" label="Inicio" />
         <q-route-tab to="/deposito" label="Depósito" />
@@ -74,7 +77,9 @@
     </div>
     <!-- Vista dinámica de páginas -->
     <q-page-container>
-      <router-view />
+      <div style="max-width: 1200px; margin: 0 auto; padding: 24px 16px; box-sizing: border-box">
+        <router-view />
+      </div>
     </q-page-container>
   </q-layout>
 </template>
@@ -95,4 +100,18 @@ function mostrarRol(rol) {
 
 <style lang="scss">
 @import 'src/css/payflow-figma.scss';
+
+.btn-payflow {
+  background: #004b8d !important;
+  color: #fff !important;
+  font-weight: 500;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
+  transition: background 0.2s;
+}
+.btn-payflow:hover,
+.btn-payflow:focus {
+  background: #00396b !important;
+  color: #fff !important;
+}
 </style>

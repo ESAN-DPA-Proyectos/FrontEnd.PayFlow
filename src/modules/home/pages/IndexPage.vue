@@ -36,10 +36,10 @@
 
       <div class="row q-col-gutter-md q-mb-md">
         <div class="col-6">
-          <q-btn label="Ir a Depósito" color="primary" class="full-width" to="/deposito" />
+          <BtnPayflow label="Ir a Depósito" class="full-width" to="/deposito" />
         </div>
         <div class="col-6">
-          <q-btn label="Ir a Retiro" color="secondary" class="full-width" to="/retiro" />
+          <BtnPayflow label="Ir a Retiro" class="full-width" to="/retiro" />
         </div>
       </div>
 
@@ -48,13 +48,13 @@
           <div class="text-subtitle2">Panel Administrativo</div>
           <div class="row q-col-gutter-sm q-mt-sm">
             <div class="col-auto">
-              <q-btn label="Validar Comprobantes" to="/admin" color="dark" />
+              <BtnPayflow label="Validar Comprobantes" to="/admin" />
             </div>
             <div class="col-auto">
-              <q-btn label="Reportes" to="/reportes" color="dark" />
+              <BtnPayflow label="Reportes" to="/reportes" />
             </div>
             <div class="col-auto">
-              <q-btn label="Mantenimiento" to="/mantenimiento" color="dark" />
+              <BtnPayflow label="Mantenimiento" to="/mantenimiento" />
             </div>
           </div>
         </q-card-section>
@@ -65,6 +65,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { BtnPayflow } from 'src/components/atomos'
 
 // Funciones locales para formato de moneda y fecha
 function formatCurrency(valor) {
@@ -85,3 +86,5 @@ const recentTransactions = ref([
   { id: 3, tipo: 'Depósito', fecha: '2025-06-30', monto: 500 },
 ])
 </script>
+
+<style scoped></style>

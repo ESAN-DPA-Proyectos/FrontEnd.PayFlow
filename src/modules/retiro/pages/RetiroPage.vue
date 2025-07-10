@@ -36,7 +36,7 @@
         <q-input label="Concepto" type="textarea" filled class="q-mb-md" v-model="concepto" />
         <div class="retiro-btns">
           <q-btn label="Cancelar" class="retiro-btn-cancelar" flat />
-          <q-btn
+          <BtnPayflow
             label="Continuar"
             class="retiro-btn-continuar"
             :disable="!monto || !beneficiario || !cuenta || !concepto"
@@ -48,8 +48,10 @@
 </template>
 
 <script>
+import { BtnPayflow } from 'src/components/atomos'
 export default {
   name: 'RetiroPage',
+  components: { BtnPayflow },
   data() {
     return {
       fondoSeleccionado: null,
