@@ -13,7 +13,7 @@
       <div
         style="
           display: flex;
-          align-items: center; /* Cambiado para centrar verticalmente */
+          align-items: center;
           width: 100%;
           justify-content: space-between;
           min-height: 100px;
@@ -46,6 +46,7 @@
           </div>
           <q-img
             src="src/assets/logo-payflow.png"
+            alt="Logo de Payflow"
             style="height: 96px; width: 96px; min-width: 96px; margin: 0"
           />
         </div>
@@ -65,9 +66,15 @@
         class="payflow-tabs"
         style="margin-right: 32px; min-width: 700px; justify-content: flex-end"
       >
-        <q-route-tab to="/" label="Inicio" />
+        <q-route-tab to="/" label="Inicio" exact />
         <q-route-tab to="/deposito" label="Depósito" />
-        <q-route-tab to="/retiro" label="Retiro" />
+        <!-- Pestaña Retiro personalizada -->
+        <q-tab
+          label="Retiro"
+          :active="isRetiroActive"
+          @click="goRetiro"
+          active-class="q-tab--active"
+        />
         <q-route-tab to="/historial" label="Historial" />
         <q-route-tab v-if="isAdmin" to="/validaciones" label="Validaciones" />
         <q-route-tab v-if="isAdmin" to="/mantenimiento" label="Mantenimiento" />
@@ -87,9 +94,20 @@
 <script setup>
 import { computed } from 'vue'
 import { useAuthStore } from 'src/modules/auth/store'
+import { useRoute, useRouter } from 'vue-router'
 
 const auth = useAuthStore()
 const isAdmin = computed(() => auth.user?.role === 'admin')
+const route = useRoute()
+const router = useRouter()
+
+// Nombres de rutas donde la pestaña Retiro debe quedar activa
+const retiroRoutes = ['retiro', 'retiro-confirmar', 'retiro-exito']
+const isRetiroActive = computed(() => retiroRoutes.includes(route.name))
+
+function goRetiro() {
+  router.push('/retiro')
+}
 
 function mostrarRol(rol) {
   if (rol === 'admin') return 'Administrador'

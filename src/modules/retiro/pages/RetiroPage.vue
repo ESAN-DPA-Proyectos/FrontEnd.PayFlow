@@ -15,7 +15,7 @@
     </div>
     <div class="retiro-form">
       <div class="retiro-label">Detalles de solicitud de retiro</div>
-      <q-form class="q-mt-md">
+      <q-form class="q-mt-md" @submit.prevent="irAConfirmacion">
         <div class="row q-col-gutter-md">
           <div class="col-6">
             <q-input label="Monto a retirar" prefix="S/" filled class="q-mb-md" v-model="monto" />
@@ -40,6 +40,7 @@
             label="Continuar"
             class="retiro-btn-continuar"
             :disable="!monto || !beneficiario || !cuenta || !concepto"
+            type="submit"
           />
         </div>
       </q-form>
@@ -62,6 +63,21 @@ export default {
       cuenta: '',
       concepto: 'Pago por reserva de hospedaje',
     }
+  },
+  methods: {
+    irAConfirmacion() {
+      const router = this.$router
+      router.push({
+        name: 'retiro-confirmar',
+        query: {
+          monto: this.monto,
+          beneficiario: this.beneficiario,
+          cuenta: this.cuenta,
+          concepto: this.concepto,
+          metodo: 'Cuenta bancaria',
+        },
+      })
+    },
   },
 }
 </script>
