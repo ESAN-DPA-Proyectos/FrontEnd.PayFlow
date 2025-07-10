@@ -1,10 +1,10 @@
 <template>
-  <div class="notificaciones-config q-pa-xl">
+  <div class="notificaciones-config q-pa-xl payflow-page-bg">
     <div class="row justify-center q-mt-xl">
-      <q-card flat bordered class="tabla-notificaciones q-pa-xl">
+      <q-card flat bordered class="payflow-card-interactive tabla-notificaciones q-pa-xl">
         <div class="row q-col-gutter-xl q-mb-md">
           <div class="col-12 flex items-center">
-            <div class="text-h6">Notificaciones</div>
+            <div class="payflow-section-title">Notificaciones</div>
           </div>
         </div>
         <q-table

@@ -1,16 +1,15 @@
 <template>
   <q-page class="q-pa-xl historial-page-payflow payflow-page-bg">
+    <!-- Título fuera del card para mantener coherencia -->
+    <div class="row q-mb-lg">
+      <div class="col-12">
+        <div class="payflow-section-title">Historial de Transacciones</div>
+      </div>
+    </div>
+
     <div class="row items-start q-col-gutter-md q-mb-lg filtros-row-payflow">
-      <!-- Card principal con título integrado -->
+      <!-- Card de filtros sin título integrado -->
       <q-card flat bordered class="payflow-shadow filtros-card-compact full-width">
-        <!-- Header del card con título -->
-        <div class="card-header-payflow q-pa-md">
-          <div class="payflow-section-title">Historial de Transacciones</div>
-        </div>
-
-        <!-- Separador visual -->
-        <q-separator />
-
         <!-- Sección de filtros -->
         <div class="q-pa-md">
           <div class="row items-center full-width q-gutter-sm filtros-grid-payflow">
@@ -114,7 +113,13 @@
                     }}</span>
                   </td>
                   <td>
-                    <BtnPayflow label="Detalle" color="primary" size="sm" flat />
+                    <BtnPayflow
+                      label="Detalle"
+                      color="primary"
+                      size="sm"
+                      flat
+                      @click="verDetalle(row.referencia)"
+                    />
                   </td>
                 </tr>
               </tbody>
@@ -134,6 +139,9 @@
 <script setup>
 import BtnPayflow from 'src/components/atomos/BtnPayflow.vue'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 const pagina = 1
 const rowsOriginal = [
   {
@@ -252,55 +260,41 @@ function aplicarFiltros() {
   }
   rows.value = filtrados
 }
+
+function verDetalle(referencia) {
+  // Extraer el ID de la referencia (ejemplo: #RT-20250422-519 -> 519)
+  const id = referencia.split('-').pop()
+  router.push({ name: 'detalle-transaccion', params: { id } })
+}
 </script>
 
 <style lang="scss" scoped>
-@import 'src/css/payflow-figma.scss';
-
 .q-page.historial-page-payflow {
   padding-left: 0 !important;
   padding-right: 0 !important;
+  padding-top: 32px !important; // Asegurar que el título sea visible
 }
 
 @media (max-width: 1100px) {
-  .filtros-row-payflow {
-    flex-direction: column;
-    align-items: center;
-  }
   .filtros-card-compact {
-    flex-direction: column;
-    gap: 12px;
-    align-items: center;
-    width: auto;
-    min-width: 0;
+    width: fit-content;
+    min-width: 220px;
     max-width: 95vw;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-  .filtros-grid-payflow {
-    flex-direction: column;
-    gap: 12px;
-    align-items: center;
-    width: auto;
-    min-width: 0;
-    max-width: 100vw;
-  }
-  .filtro-item {
-    max-width: 100%;
-    min-width: 0;
-    flex: 1 1 100%;
+    padding: 12px 8vw !important;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 @media (max-width: 600px) {
   .filtros-card-compact {
-    width: auto;
-    min-width: 0;
-    max-width: 100vw;
-    padding: 8px 0 !important;
+    width: fit-content;
+    min-width: 180px;
+    max-width: 98vw;
+    padding: 8px 2vw !important;
   }
 }
 .historial-page-payflow {
-  font-family: $font-family-main;
+  font-family: 'Inter', 'Roboto', Arial, sans-serif;
 }
 .filtros-row-payflow {
   width: 100%;
@@ -310,7 +304,7 @@ function aplicarFiltros() {
   justify-content: center;
 }
 .filtros-card-compact {
-  border-radius: 8px;
+  border-radius: 12px; // Esquinas curvas consistentes
   background: #fff;
   width: fit-content;
   min-width: 240px;
@@ -319,11 +313,12 @@ function aplicarFiltros() {
   margin-right: auto;
   box-sizing: border-box;
   gap: 8px;
-  padding: 0 !important; /* Removemos padding porque ahora lo maneja el header y content internamente */
+  padding: 0 !important;
   display: flex;
   flex-direction: column;
   justify-content: center;
   transition: width 0.2s;
+  overflow: hidden; // Para mantener las esquinas curvas
 }
 .filtros-grid-payflow {
   width: 100%;
@@ -331,13 +326,6 @@ function aplicarFiltros() {
   gap: 24px;
   display: flex;
   align-items: flex-end;
-  border-collapse: separate;
-  border-spacing: 0;
-  border: none;
-  border-radius: 8px;
-  background: #fff;
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
   justify-content: center;
 }
 @media (max-width: 1100px) {
@@ -391,14 +379,14 @@ function aplicarFiltros() {
   margin-left: 0;
 }
 .movimientos-card {
-  border-radius: 8px;
+  border-radius: 12px; // Esquinas curvas consistentes
   background: #fff;
 }
 .tabla-movimientos-payflow {
   width: 100%;
   min-width: 700px;
   border-collapse: collapse;
-  font-family: $font-family-main;
+  font-family: 'Inter', 'Roboto', Arial, sans-serif;
   font-size: 14px;
 }
 .tabla-movimientos-payflow th,
@@ -464,31 +452,14 @@ function aplicarFiltros() {
   display: flex;
   align-items: center;
 }
-@media (max-width: 1100px) {
-  .filtros-row-payflow {
-    flex-direction: column;
-    align-items: center;
-  }
-  .filtros-card-compact {
-    flex-direction: column;
-    gap: 12px;
-    align-items: center;
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-  }
-  .filtros-grid-payflow {
-    flex-direction: column;
-    gap: 12px;
-    align-items: center;
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-  }
-  .filtro-item {
-    max-width: 100%;
-    min-width: 0;
-    flex: 1 1 100%;
-  }
+// Asegurar visibilidad del título en la página de historial
+.historial-page-payflow .payflow-section-title {
+  display: block !important;
+  visibility: visible !important;
+  color: #0048bd !important;
+  font-size: 28px !important;
+  font-weight: 600 !important;
+  margin-bottom: 16px !important; // Reducido de 32px a 16px
+  z-index: 1;
 }
 </style>

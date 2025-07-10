@@ -14,7 +14,7 @@
               color="positive"
               class="payflow-icon-shadow q-mb-md"
             />
-            <div class="text-h6 q-mt-md text-bold" style="color: #1976d2">
+            <div class="text-h6 q-mt-md text-bold" style="color: var(--payflow-primary)">
               ¡Solicitud de retiro registrado correctamente!
             </div>
             <div class="q-mt-sm text-orange-7 text-bold text-subtitle1">PENDIENTE</div>
@@ -30,19 +30,21 @@
             </div>
             <div class="row payflow-row-interactive q-mb-sm q-py-xs">
               <div class="col-6 text-left text-grey-7 text-body2">Monto a retirar</div>
-              <div class="col-6 text-right text-bold">S/ {{ $route.query.monto }}</div>
+              <div class="col-6 text-right text-bold">S/ {{ datosRetiro.monto }}</div>
             </div>
             <div class="row payflow-row-interactive q-mb-sm q-py-xs">
               <div class="col-6 text-left text-grey-7 text-body2">Método de retiro</div>
-              <div class="col-6 text-right">{{ $route.query.metodo }}</div>
+              <div class="col-6 text-right">{{ datosRetiro.metodo }}</div>
             </div>
             <div class="row payflow-row-interactive q-mb-sm q-py-xs">
               <div class="col-6 text-left text-grey-7 text-body2">Destino</div>
-              <div class="col-6 text-right">{{ $route.query.cuenta }}</div>
+              <div class="col-6 text-right">{{ datosRetiro.cuenta }}</div>
             </div>
             <div class="row payflow-row-interactive q-mb-sm q-py-xs">
               <div class="col-6 text-left text-grey-7 text-body2">Referencia</div>
-              <div class="col-6 text-right text-bold" style="color: #1976d2">#RT-20250422-402</div>
+              <div class="col-6 text-right text-bold" style="color: var(--payflow-primary)">
+                #RT-20250422-402
+              </div>
             </div>
             <div class="row payflow-row-interactive q-mb-sm q-py-xs">
               <div class="col-6 text-left text-grey-7 text-body2">Fecha y hora</div>
@@ -61,12 +63,30 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { BtnPayflow } from 'src/components/atomos'
+
 const router = useRouter()
+const datosRetiro = ref({})
+
+onMounted(() => {
+  // Obtener datos del sessionStorage
+  const datos = sessionStorage.getItem('datosRetiro')
+  if (datos) {
+    datosRetiro.value = JSON.parse(datos)
+    // Limpiar datos después de mostrarlos (final del flujo)
+    sessionStorage.removeItem('datosRetiro')
+  } else {
+    // Si no hay datos, redirigir al inicio
+    router.push({ name: 'home' })
+  }
+})
+
 function goHistorial() {
   router.push({ name: 'historial' })
 }
+
 function goInicio() {
   router.push({ name: 'home' })
 }
