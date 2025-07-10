@@ -8,11 +8,9 @@ export const useNotificacionesStore = defineStore('notificaciones', {
       { id: 3, mensaje: 'Nuevo mensaje del administrador', leido: true },
     ],
   }),
-
   getters: {
     nuevasNotificaciones: (state) => state.lista.filter((n) => !n.leido).length,
   },
-
   actions: {
     marcarComoLeida(id) {
       const notificacion = this.lista.find((n) => n.id === id)
@@ -27,3 +25,4 @@ export const useNotificacionesStore = defineStore('notificaciones', {
     },
   },
 })
+
