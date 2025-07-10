@@ -1,39 +1,44 @@
 <template>
   <q-page class="q-pa-md flex justify-center">
     <div class="q-pa-md" style="max-width: 1280px; width: 100%">
-      <!-- Bienvenida y resumen -->
-      <h6 class="text-h6 q-mb-md">Bienvenido, Juan Pérez</h6>
-
-      <q-card class="q-mb-md">
-        <q-card-section>
-          <div class="text-subtitle2">Resumen de Cuenta</div>
-          <div>
-            Saldo actual: <strong>{{ formatCurrency(balance) }}</strong>
-          </div>
-        </q-card-section>
-      </q-card>
+      <!-- Resumen de cuenta (mitad de ancho, a la izquierda) -->
+      <div class="row q-mb-md">
+        <div class="col-12 col-md-6">
+          <q-card>
+            <q-card-section>
+              <div class="text-subtitle2">Resumen de Cuenta</div>
+              <div>
+                Saldo actual: <strong>{{ formatCurrency(saldoActual) }}</strong>
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+      </div>
 
       <!-- Tabla con transacciones -->
       <q-card>
         <q-card-section>
           <div class="text-subtitle2 q-mb-sm">Últimas 10 Transacciones</div>
 
-          <!-- Campo de búsqueda -->
-          <q-input
-            outlined
-            dense
-            debounce="300"
-            v-model="search"
-            placeholder="Buscar en las transacciones..."
-            class="q-mb-md"
-            clearable
-          >
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
+          <!-- Campo de búsqueda reducido -->
+          <div class="row q-mb-md">
+            <div class="col-12 col-md-6">
+              <q-input
+                outlined
+                dense
+                debounce="300"
+                v-model="search"
+                placeholder="Buscar en las transacciones..."
+                clearable
+              >
+                <template v-slot:append>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
+            </div>
+          </div>
 
-          <!-- Tabla con ordenamiento y filtro -->
+          <!-- Tabla con ordenamiento -->
           <q-table
             :rows="filteredTransactions"
             :columns="columns"
@@ -61,14 +66,11 @@
 import { ref, onMounted, computed } from 'vue'
 import { api } from 'boot/axios'
 
-// Simulación del saldo actual
-const balance = 1250.0
-
 const allTransactions = ref([])
 const loading = ref(true)
 const search = ref('')
 
-// Columnas visibles (sin ID, Referencia, Comprobante ni OrigenRol)
+// Columnas visibles
 const columns = [
   { name: 'tipo', label: 'Tipo', field: 'tipo', align: 'left', sortable: true },
   {
@@ -77,7 +79,7 @@ const columns = [
     field: 'monto',
     align: 'right',
     sortable: true,
-    format: (val) => `S/ ${val.toFixed(2)}`,
+    format: (val) => `S/ ${parseFloat(val).toFixed(2)}`,
   },
   {
     name: 'fechaRegistro',
@@ -112,10 +114,12 @@ const columns = [
   { name: 'concepto', label: 'Concepto', field: 'concepto', align: 'left', sortable: true },
 ]
 
+// Función para formato de moneda
 function formatCurrency(valor) {
   return `S/ ${valor.toLocaleString('es-PE', { minimumFractionDigits: 2 })}`
 }
 
+// Función para formato de fecha
 function formatDate(fechaISO) {
   if (!fechaISO) return '-'
   const [date] = fechaISO.split('T')
@@ -123,13 +127,30 @@ function formatDate(fechaISO) {
   return `${d}/${m}/${y}`
 }
 
-// Solo las 10 más recientes ordenadas por fecha
+// Cálculo del saldo real: solo "procesado", suma depósitos y resta retiros
+const saldoActual = computed(() => {
+  return allTransactions.value.reduce((acum, t) => {
+    const estado = (t.estado || '').toLowerCase()
+    const tipo = (t.tipo || '').toLowerCase()
+    const monto = parseFloat(t.monto || 0)
+
+    if (estado === 'procesado') {
+      if (tipo === 'deposito') return acum + monto
+      if (tipo === 'retiro') return acum - monto
+    }
+
+    return acum
+  }, 0)
+})
+
+// Últimas 10 transacciones ordenadas por fecha
 const filteredTransactions = computed(() => {
   return [...allTransactions.value]
     .sort((a, b) => new Date(b.fechaRegistro) - new Date(a.fechaRegistro))
     .slice(0, 10)
 })
 
+// Obtener transacciones del backend
 onMounted(async () => {
   try {
     const response = await api.get('/api/v1/transactions')
