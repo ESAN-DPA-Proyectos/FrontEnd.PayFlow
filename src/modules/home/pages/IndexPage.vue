@@ -1,7 +1,7 @@
 <template>
-  <q-page class="q-pa-md flex justify-center">
+  <q-page class="q-pa-md flex justify-center payflow-page-bg">
     <div class="q-pa-md" style="max-width: 1280px; width: 100%">
-      <h6 class="text-h6 q-mb-md">Bienvenido, Juan Pérez</h6>
+      <h6 class="payflow-section-title q-mb-md">Bienvenido, Juan Pérez</h6>
 
       <q-card class="q-mb-md">
         <q-card-section>

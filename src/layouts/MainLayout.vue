@@ -53,18 +53,15 @@
       </div>
     </div>
     <!-- Menú de navegación -->
-    <div
-      class="navbar-payflow"
-      style="width: 100%; display: flex; justify-content: flex-end; background: #0656b6"
-    >
+    <div class="navbar-payflow" style="width: 100%; background: #0656b6">
       <q-tabs
         dense
-        align="right"
+        align="center"
         active-color="white"
         indicator-color="white"
         narrow-indicator
         class="payflow-tabs"
-        style="margin-right: 32px; min-width: 700px; justify-content: flex-end"
+        style="min-width: 700px"
       >
         <q-route-tab to="/" label="Inicio" exact />
         <q-route-tab to="/deposito" label="Depósito" />
@@ -75,7 +72,13 @@
           @click="goRetiro"
           active-class="q-tab--active"
         />
-        <q-route-tab to="/historial" label="Historial" />
+        <!-- Pestaña Historial personalizada -->
+        <q-tab
+          label="Historial"
+          :active="isHistorialActive"
+          @click="goHistorial"
+          active-class="q-tab--active"
+        />
         <q-route-tab v-if="isAdmin" to="/validaciones" label="Validaciones" />
         <q-route-tab v-if="isAdmin" to="/mantenimiento" label="Mantenimiento" />
         <q-route-tab v-if="isAdmin" to="/reportes" label="Reportes" />
@@ -105,8 +108,16 @@ const router = useRouter()
 const retiroRoutes = ['retiro', 'retiro-confirmar', 'retiro-exito']
 const isRetiroActive = computed(() => retiroRoutes.includes(route.name))
 
+// Nombres de rutas donde la pestaña Historial debe quedar activa
+const historialRoutes = ['historial', 'detalle-transaccion']
+const isHistorialActive = computed(() => historialRoutes.includes(route.name))
+
 function goRetiro() {
   router.push('/retiro')
+}
+
+function goHistorial() {
+  router.push('/historial')
 }
 
 function mostrarRol(rol) {
@@ -117,8 +128,6 @@ function mostrarRol(rol) {
 </script>
 
 <style lang="scss">
-@import 'src/css/payflow-figma.scss';
-
 .btn-payflow {
   background: #004b8d !important;
   color: #fff !important;

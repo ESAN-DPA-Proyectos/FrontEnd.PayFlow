@@ -1,8 +1,8 @@
 <template>
-  <q-page class="flex flex-center">
-    <q-card class="q-pa-lg" style="width: 400px">
+  <q-page class="flex flex-center payflow-page-bg">
+    <q-card class="payflow-card-interactive q-pa-lg" style="width: 400px">
       <q-card-section>
-        <div class="text-h5 text-primary text-center">Inicio de Sesión</div>
+        <div class="payflow-section-title text-center">Inicio de Sesión</div>
       </q-card-section>
 
       <q-card-section>

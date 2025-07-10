@@ -54,6 +54,11 @@ const routes = [
         component: () => import('src/modules/historial/pages/HistorialPage.vue'),
       },
       {
+        path: 'historial/detalle/:id',
+        name: 'detalle-transaccion',
+        component: () => import('src/modules/historial/pages/DetalleTransaccionPage.vue'),
+      },
+      {
         path: 'admin',
         name: 'admin',
         component: () => import('src/modules/admin/pages/ValidarComprobantesPage.vue'),
