@@ -2,6 +2,9 @@
   <q-page class="flex flex-center">
     <q-card class="q-pa-lg" style="width: 400px">
       <q-card-section>
+        <div class="text-bold text-black text-center" style="font-size: 1.25rem">
+          Bienvenida Usuario
+        </div>
         <div class="text-h5 text-primary text-center">Registro</div>
       </q-card-section>
 
