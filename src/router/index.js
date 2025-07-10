@@ -6,7 +6,7 @@ import {
   createWebHashHistory,
 } from 'vue-router'
 import routes from './routes'
-// import { useAuthStore } from 'src/modules/auth/store'
+import { useAuthStore } from 'src/modules/auth/store'
 
 export default defineRouter(function () {
   const createHistory = process.env.SERVER
@@ -21,8 +21,7 @@ export default defineRouter(function () {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   })
 
-  // 🚫 Comentado para fase de pruebas
-  /*
+  // Activar guard de autenticación
   Router.beforeEach((to, from, next) => {
     const auth = useAuthStore()
     if (to.meta.requiresAuth && !auth.isAuthenticated) {
@@ -30,7 +29,6 @@ export default defineRouter(function () {
     }
     next()
   })
-  */
 
   return Router
 })

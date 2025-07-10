@@ -5,11 +5,6 @@ const routes = [
     component: () => import('src/layouts/AuthLayout.vue'),
     children: [
       {
-        path: '',
-        name: 'bienvenido',
-        component: () => import('src/modules/home/pages/BienvenidoPage.vue'),
-      },
-      {
         path: 'login',
         name: 'login',
         component: () => import('src/modules/auth/pages/LoginPage.vue'),
@@ -42,6 +37,16 @@ const routes = [
         path: 'retiro',
         name: 'retiro',
         component: () => import('src/modules/retiro/pages/RetiroPage.vue'),
+      },
+      {
+        path: 'retiro/confirmacionretiro',
+        name: 'retiro-confirmar',
+        component: () => import('src/modules/retiro/pages/ConfirmacionRetiroPage.vue'),
+      },
+      {
+        path: 'retiro/retiroexito',
+        name: 'retiro-exito',
+        component: () => import('src/modules/retiro/pages/RetiroExitoPage.vue'),
       },
       {
         path: 'historial',
@@ -81,7 +86,7 @@ const routes = [
   {
     path: '/:catchAll(.*)*',
     name: 'error404',
-    component: () => import('src/modules/home/pages/ErrorNotFound.vue'),
+    component: () => import('src/modules/common/pages/ErrorNotFound.vue'),
   },
 ]
 
