@@ -17,34 +17,36 @@
         </div>
         <q-separator class="q-my-sm" />
         <table class="detalle-table">
-          <tr>
-            <td>Fecha y hora</td>
-            <td>{{ transaccion?.fecha || '-' }}</td>
-          </tr>
-          <tr>
-            <td>Referencia</td>
-            <td>{{ transaccion?.referencia || referencia }}</td>
-          </tr>
-          <tr>
-            <td>Método de retiro</td>
-            <td>Cuenta bancaria</td>
-          </tr>
-          <tr>
-            <td>Destino</td>
-            <td>IBK - 123 - 524895 - 01</td>
-          </tr>
-          <tr>
-            <td>Concepto</td>
-            <td>Pago por reserva de hospedaje</td>
-          </tr>
-          <tr>
-            <td>Estado actual</td>
-            <td>Pendiente de procesamiento</td>
-          </tr>
-          <tr>
-            <td>Usuario</td>
-            <td>{{ transaccion?.usuario || '-' }}</td>
-          </tr>
+          <tbody>
+            <tr>
+              <td>Fecha y hora</td>
+              <td>{{ transaccion?.fecha || '-' }}</td>
+            </tr>
+            <tr>
+              <td>Referencia</td>
+              <td>{{ transaccion?.referencia || referencia }}</td>
+            </tr>
+            <tr>
+              <td>Método de retiro</td>
+              <td>Cuenta bancaria</td>
+            </tr>
+            <tr>
+              <td>Destino</td>
+              <td>IBK - 123 - 524895 - 01</td>
+            </tr>
+            <tr>
+              <td>Concepto</td>
+              <td>Pago por reserva de hospedaje</td>
+            </tr>
+            <tr>
+              <td>Estado actual</td>
+              <td>Pendiente de procesamiento</td>
+            </tr>
+            <tr>
+              <td>Usuario</td>
+              <td>{{ transaccion?.usuario || '-' }}</td>
+            </tr>
+          </tbody>
         </table>
       </q-card>
 
