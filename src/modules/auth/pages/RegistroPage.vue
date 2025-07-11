@@ -1,37 +1,216 @@
 <template>
-  <q-page class="flex flex-center">
-    <q-card class="q-pa-lg" style="width: 400px">
-      <q-card-section>
-        <div class="text-h5 text-primary text-center">Registro</div>
-      </q-card-section>
-
-      <q-card-section>
-        <q-input filled label="Nombre" v-model="name" />
-        <q-input filled label="Correo" v-model="email" />
-        <q-input filled type="password" label="Contraseña" class="q-mt-md" v-model="password" />
-        <q-btn label="Registrarse" color="primary" class="q-mt-lg full-width" @click="register" />
-      </q-card-section>
-    </q-card>
-  </q-page>
+  <div>
+    <div class="barra-azul barra-azul-flex">
+      <q-btn
+        label="Volver al login"
+        color="white"
+        text-color="primary"
+        flat
+        class="volver-login-btn"
+        @click="router.push({ name: 'login' })"
+      />
+    </div>
+    <q-page class="q-pa-xl flex flex-center bg-grey-1">
+      <div class="registro-container">
+        <div class="registro-box">
+          <div class="registro-title text-primary">Registro de Usuario</div>
+          <div class="registro-desc">Complete sus datos para registro en la base de datos:</div>
+          <div class="registro-form">
+            <div class="registro-col">
+              <q-input filled label="1. Nombres*" v-model="name" class="q-mb-md" />
+              <q-input filled label="2. Apellidos*" v-model="lastname" class="q-mb-md" />
+              <q-input filled label="3. Correo Electrónico*" v-model="email" class="q-mb-md" />
+              <q-input filled label="4. Documento de Identidad*" v-model="dni" class="q-mb-md" />
+              <q-input filled label="5. Usuario*" v-model="username" class="q-mb-md" />
+            </div>
+            <div class="registro-col">
+              <q-input
+                filled
+                :type="showPassword ? 'text' : 'password'"
+                label="6. Contraseña*"
+                v-model="password"
+                class="q-mb-md"
+              />
+              <q-input
+                filled
+                :type="showPassword ? 'text' : 'password'"
+                label="7. Confirmar Contraseña*"
+                v-model="confirmPassword"
+                class="q-mb-md"
+              />
+              <q-checkbox v-model="showPassword" label="Mostrar Contraseña" class="q-mb-md" />
+              <div class="registro-password-info">
+                <q-icon name="warning" color="grey-7" size="md" class="q-mr-sm" />
+                <span>
+                  La contraseña debe cumplir con los siguientes criterios:<br />
+                  - Al menos 8 caracteres<br />
+                  - Al menos una letra mayúscula<br />
+                  - Al menos un número
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="registro-logo-box">
+            <q-img
+              src="/src/assets/logo-payflow.png"
+              alt="Payflow Logo"
+              style="width: 120px; height: 120px"
+            />
+            <div class="registro-logo-text text-primary">PAYFLOW</div>
+          </div>
+          <!-- Botón personalizado de mejora -->
+          <BtnPayflow label="Registrarse" class="registro-btn" @click="register" />
+          <div class="registro-campos">*Campos mandatorios</div>
+        </div>
+      </div>
+    </q-page>
+  </div>
 </template>
 
 <script setup>
+import { BtnPayflow } from 'src/components/atomos'
 import { ref } from 'vue'
-import { useAuthStore } from 'src/modules/auth/store'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
+import 'src/css/payflow-figma.scss'
 
 const name = ref('')
+const lastname = ref('')
 const email = ref('')
+const dni = ref('')
+const username = ref('')
 const password = ref('')
+const confirmPassword = ref('')
+const showPassword = ref(false)
 const router = useRouter()
-const auth = useAuthStore()
 
-function register() {
-  // Simula registro e inicio de sesión
-  const fakeToken = 'FAKE_TOKEN'
-  const fakeUser = { name: name.value, email: email.value }
-
-  auth.login(fakeToken, fakeUser)
-  router.push({ name: 'home' })
+async function register() {
+  if (password.value !== confirmPassword.value) {
+    alert('Las contraseñas no coinciden.')
+    return
+  }
+  if (password.value.length < 8) {
+    alert('La contraseña debe tener al menos 8 caracteres.')
+    return
+  }
+  if (!/[A-Z]/.test(password.value)) {
+    alert('La contraseña debe contener al menos una letra mayúscula.')
+    return
+  }
+  if (!/[0-9]/.test(password.value)) {
+    alert('La contraseña debe contener al menos un número.')
+    return
+  }
+  try {
+    const body = {
+      idUsuario: 0,
+      nombre: name.value,
+      apellido: lastname.value,
+      dni: dni.value,
+      correo: email.value,
+      usuario: username.value,
+      contrasena: password.value,
+      nuevaContrasena: null,
+      fechaRegistro: new Date().toISOString(),
+      estado: 'Activo',
+    }
+    await axios.post('http://localhost:5283/api/Usuarios', body)
+    alert('Usuario registrado correctamente.')
+    router.push({ name: 'login' })
+  } catch (error) {
+    const msg = error.response?.data?.message || 'Error al registrar usuario.'
+    alert(msg)
+  }
 }
 </script>
+
+<style scoped>
+.barra-azul {
+  width: 100vw;
+  height: 56px;
+  background: #0a3d91;
+  margin-bottom: 0;
+}
+.barra-azul-flex {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+}
+.volver-login-btn {
+  margin-right: 32px;
+  margin-top: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  background: transparent;
+}
+.registro-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.registro-box {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 32px 24px 24px 24px;
+  max-width: 900px;
+  width: 100%;
+}
+.registro-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+.registro-desc {
+  font-size: 1.1rem;
+  margin-bottom: 24px;
+}
+.registro-form {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  margin-bottom: 16px;
+}
+.registro-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.registro-logo-box {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 24px 0 16px 0;
+  gap: 16px;
+}
+.registro-logo-text {
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+.registro-btn {
+  width: 220px;
+  margin: 0 auto 12px auto;
+  display: block;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.registro-campos {
+  font-size: 0.9rem;
+  color: #888;
+  margin-top: 8px;
+  text-align: left;
+}
+.registro-password-info {
+  background: #f5f5f5;
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  color: #444;
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+</style>

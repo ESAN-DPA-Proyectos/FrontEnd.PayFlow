@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-pa-md flex justify-center">
+  <q-page class="q-pa-md flex justify-center payflow-page-bg">
     <div class="q-pa-md" style="max-width: 1280px; width: 100%">
       <!-- Resumen de cuenta (mitad de ancho, a la izquierda) -->
       <div class="row q-mb-md">
