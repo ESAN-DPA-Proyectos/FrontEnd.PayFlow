@@ -1,6 +1,6 @@
 <template>
-  <q-page class="q-pa-xl">
-    <div class="text-h5">Realizar Depósito</div>
+  <q-page class="q-pa-xl payflow-page-bg">
+    <div class="payflow-section-title q-mb-lg">Realizar Depósito</div>
 
     <q-form class="q-mt-md" @submit.prevent="handleSubmit">
       <!-- Monto -->
@@ -64,8 +64,11 @@
         no-thumbnails
       />
 
-      <!-- Botón -->
-      <q-btn type="submit" label="Confirmar Depósito" color="primary" />
+      <!-- Botón de submit con estilo -->
+      <div class="q-pa-md flex flex-center">
+        <BtnPayflow v-if="typeof BtnPayflow !== 'undefined'" label="Confirmar Depósito" type="submit" />
+        <q-btn v-else type="submit" label="Confirmar Depósito" color="primary" />
+      </div>
     </q-form>
   </q-page>
 </template>
@@ -146,3 +149,13 @@ async function handleSubmit() {
   }
 }
 </script>
+
+<style scoped>
+.payflow-page-bg {
+  /* Aplica tus estilos de fondo aquí si lo necesitas */
+}
+.payflow-section-title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+</style>
