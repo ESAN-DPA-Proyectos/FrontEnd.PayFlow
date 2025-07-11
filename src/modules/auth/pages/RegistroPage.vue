@@ -58,7 +58,8 @@
             />
             <div class="registro-logo-text text-primary">PAYFLOW</div>
           </div>
-          <q-btn label="Guardar" color="primary" class="registro-btn" @click="register" />
+          <!-- Botón personalizado de mejora -->
+          <BtnPayflow label="Registrarse" class="registro-btn" @click="register" />
           <div class="registro-campos">*Campos mandatorios</div>
         </div>
       </div>
@@ -67,6 +68,7 @@
 </template>
 
 <script setup>
+import { BtnPayflow } from 'src/components/atomos'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
@@ -114,8 +116,6 @@ async function register() {
     }
     await axios.post('http://localhost:5283/api/Usuarios', body)
     alert('Usuario registrado correctamente.')
-    // Puedes loguear automáticamente si lo deseas:
-    // auth.login(response.data.usuario)
     router.push({ name: 'login' })
   } catch (error) {
     const msg = error.response?.data?.message || 'Error al registrar usuario.'
@@ -123,7 +123,6 @@ async function register() {
   }
 }
 </script>
-}
 
 <style scoped>
 .barra-azul {
