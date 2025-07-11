@@ -39,9 +39,24 @@ const routes = [
         component: () => import('src/modules/retiro/pages/RetiroPage.vue'),
       },
       {
+        path: 'retiro/confirmacionretiro',
+        name: 'retiro-confirmar',
+        component: () => import('src/modules/retiro/pages/ConfirmacionRetiroPage.vue'),
+      },
+      {
+        path: 'retiro/retiroexito',
+        name: 'retiro-exito',
+        component: () => import('src/modules/retiro/pages/RetiroExitoPage.vue'),
+      },
+      {
         path: 'historial',
         name: 'historial',
         component: () => import('src/modules/historial/pages/HistorialPage.vue'),
+      },
+      {
+        path: 'historial/detalle/:id',
+        name: 'detalle-transaccion',
+        component: () => import('src/modules/historial/pages/DetalleTransaccionPage.vue'),
       },
       {
         path: 'admin',
