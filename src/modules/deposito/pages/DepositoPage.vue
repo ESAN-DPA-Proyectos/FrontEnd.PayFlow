@@ -1,6 +1,6 @@
 <template>
-  <q-page class="q-pa-xl">
-    <div class="text-h5">Realizar Depósito</div>
+  <q-page class="q-pa-xl payflow-page-bg">
+    <div class="payflow-section-title q-mb-lg">Realizar Depósito</div>
     <q-form class="q-mt-md">
       <q-input label="Monto (S/)" type="number" filled class="q-mb-md" />
       <q-input label="Referencia del voucher" filled class="q-mb-md" />
