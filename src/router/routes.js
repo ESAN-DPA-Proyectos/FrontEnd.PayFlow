@@ -34,6 +34,11 @@ const routes = [
         component: () => import('src/modules/deposito/pages/DepositoPage.vue'),
       },
       {
+        path: 'deposito-exito',
+        name: 'deposito-exito',
+        component: () => import('src/modules/deposito/pages/DepositoExitoPage.vue'),
+      },
+      {
         path: 'retiro',
         name: 'retiro',
         component: () => import('src/modules/retiro/pages/RetiroPage.vue'),
