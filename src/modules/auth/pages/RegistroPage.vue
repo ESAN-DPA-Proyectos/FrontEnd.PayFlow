@@ -2,7 +2,7 @@
   <div>
     <div class="barra-azul barra-azul-flex">
       <q-btn
-        label="Volver al login"
+        label="VOLVER AL LOGIN"
         color="white"
         text-color="primary"
         flat
@@ -10,11 +10,13 @@
         @click="router.push({ name: 'login' })"
       />
     </div>
+
     <q-page class="q-pa-xl flex flex-center bg-grey-1">
       <div class="registro-container">
         <div class="registro-box">
           <div class="registro-title text-primary">Registro de Usuario</div>
           <div class="registro-desc">Complete sus datos para registro en la base de datos:</div>
+
           <div class="registro-form">
             <div class="registro-col">
               <q-input filled label="1. Nombres*" v-model="name" class="q-mb-md" />
@@ -23,6 +25,7 @@
               <q-input filled label="4. Documento de Identidad*" v-model="dni" class="q-mb-md" />
               <q-input filled label="5. Usuario*" v-model="username" class="q-mb-md" />
             </div>
+
             <div class="registro-col">
               <q-input
                 filled
@@ -50,16 +53,20 @@
               </div>
             </div>
           </div>
+
           <div class="registro-logo-box">
             <q-img
               src="/src/assets/logo-payflow.png"
               alt="Payflow Logo"
               style="width: 120px; height: 120px"
             />
-            <div class="registro-logo-text text-primary">PAYFLOW</div>
           </div>
-          <!-- Botón personalizado de mejora -->
-          <BtnPayflow label="Registrarse" class="registro-btn" @click="register" />
+
+          <!-- Botón de registro -->
+          <div class="registro-btns">
+            <BtnPayflow label="REGISTRARSE" class="registro-btn" @click="register" />
+          </div>
+
           <div class="registro-campos">*Campos mandatorios</div>
         </div>
       </div>
@@ -129,13 +136,11 @@ async function register() {
   width: 100vw;
   height: 56px;
   background: #0a3d91;
-  margin-bottom: 0;
 }
 .barra-azul-flex {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  position: relative;
 }
 .volver-login-btn {
   margin-right: 32px;
@@ -162,10 +167,12 @@ async function register() {
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 4px;
+  text-align: center;
 }
 .registro-desc {
   font-size: 1.1rem;
   margin-bottom: 24px;
+  text-align: center;
 }
 .registro-form {
   display: flex;
@@ -181,19 +188,18 @@ async function register() {
 .registro-logo-box {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   margin: 24px 0 16px 0;
   gap: 16px;
 }
-.registro-logo-text {
-  font-size: 2rem;
-  font-weight: bold;
-  letter-spacing: 2px;
+.registro-btns {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+  margin-bottom: 8px;
 }
 .registro-btn {
   width: 220px;
-  margin: 0 auto 12px auto;
-  display: block;
   font-size: 1.2rem;
   font-weight: bold;
 }
@@ -201,7 +207,7 @@ async function register() {
   font-size: 0.9rem;
   color: #888;
   margin-top: 8px;
-  text-align: left;
+  text-align: center;
 }
 .registro-password-info {
   background: #f5f5f5;
