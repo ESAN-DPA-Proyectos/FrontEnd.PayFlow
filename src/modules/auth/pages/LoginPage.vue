@@ -42,16 +42,30 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from 'src/modules/auth/store'
+import axios from 'axios'
 
 const email = ref('')
 const password = ref('')
 const router = useRouter()
 const auth = useAuthStore()
 
-function login() {
-  // Simula login con cualquier credencial
-  auth.loginSimulado(email.value)
-  router.push({ name: 'home' })
+async function login() {
+  try {
+    const response = await axios.post('http://localhost:5283/api/Usuarios/login', {
+      usuario: email.value,
+      contrasena: password.value,
+    })
+    // Muestra la respuesta completa para depuración
+    console.log('Login response:', response.data)
+    const { usuario } = response.data
+    auth.login(usuario)
+    router.push({ name: 'home' })
+  } catch (error) {
+    // Muestra el error real
+    console.log('Login error:', error.response?.data || error)
+    const msg = error.response?.data?.message || 'Credenciales incorrectas o error de conexión.'
+    alert(msg)
+  }
 }
 
 function goToRegister() {
