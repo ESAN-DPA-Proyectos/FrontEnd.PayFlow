@@ -43,6 +43,11 @@
             </div>
           </div>
 
+          <!-- Ícono de notificaciones -->
+          <q-btn flat round dense icon="notifications" @click="router.push('/notificaciones')">
+            <q-badge color="red" floating transparent v-if="tieneNotificaciones" />
+          </q-btn>
+
           <q-img
             src="src/assets/logo-payflow.png"
             alt="Logo de Payflow"
@@ -77,6 +82,7 @@
           @click="goHistorial"
           active-class="q-tab--active"
         />
+        <q-route-tab to="/notificaciones" label="Notificaciones" />
 
         <!-- Panel de Administración -->
         <q-btn-dropdown
@@ -97,6 +103,9 @@
             <q-item clickable v-ripple :to="{ name: 'admin-asignar-roles' }">
               <q-item-section>Asignar Roles</q-item-section>
             </q-item>
+            <q-item clickable v-ripple :to="{ name: 'admin-eliminar-usuario' }">
+              <q-item-section>Eliminar Usuario</q-item-section>
+            </q-item>
           </q-list>
         </q-btn-dropdown>
 
@@ -114,9 +123,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useAuthStore } from 'src/modules/auth/store'
 import { useRoute, useRouter } from 'vue-router'
+import { api } from 'boot/axios'
 
 const auth = useAuthStore()
 const route = useRoute()
@@ -131,10 +141,21 @@ const isHistorialActive = computed(() => historialRoutes.includes(route.name))
 function goRetiro() {
   router.push('/retiro')
 }
-
 function goHistorial() {
   router.push('/historial')
 }
+
+const tieneNotificaciones = ref(false)
+
+onMounted(async () => {
+  try {
+    const { data } = await api.get('/api/notificaciones')
+    tieneNotificaciones.value = (data.length || 0) > 0
+  } catch {
+    // Si hay error, asumimos que no hay notificaciones pendientes
+    tieneNotificaciones.value = false
+  }
+})
 </script>
 
 <style lang="scss">
