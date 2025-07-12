@@ -33,17 +33,16 @@
             PAYFLOW
           </div>
         </div>
+
         <div style="display: flex; align-items: center; gap: 18px">
           <div
             style="display: flex; flex-direction: column; align-items: flex-end; text-align: right"
           >
-            <div style="font-size: 1.4rem; font-weight: 500; margin-bottom: 2px">
-              Bienvenido, {{ auth.user?.name || 'usuario' }}
-            </div>
-            <div style="font-size: 1.1rem; color: #7fd1e8; font-weight: 400; margin-bottom: 0">
-              {{ auth.user?.role ? mostrarRol(auth.user.role) : '' }}
+            <div style="font-size: 1.4rem; font-weight: 500; margin-bottom: 0">
+              Bienvenido, {{ auth.user?.nombre || 'usuario' }}
             </div>
           </div>
+
           <q-img
             src="src/assets/logo-payflow.png"
             alt="Logo de Payflow"
@@ -52,7 +51,8 @@
         </div>
       </div>
     </div>
-    <!-- Menú de navegación -->
+
+    <!-- MENÚ DE NAVEGACIÓN -->
     <div class="navbar-payflow" style="width: 100%; background: #0656b6">
       <q-tabs
         dense
@@ -65,27 +65,46 @@
       >
         <q-route-tab to="/" label="Inicio" exact />
         <q-route-tab to="/deposito" label="Depósito" />
-        <!-- Pestaña Retiro personalizada -->
         <q-tab
           label="Retiro"
           :active="isRetiroActive"
           @click="goRetiro"
           active-class="q-tab--active"
         />
-        <!-- Pestaña Historial personalizada -->
         <q-tab
           label="Historial"
           :active="isHistorialActive"
           @click="goHistorial"
           active-class="q-tab--active"
         />
-        <q-route-tab v-if="isAdmin" to="/validaciones" label="Validaciones" />
-        <q-route-tab v-if="isAdmin" to="/mantenimiento" label="Mantenimiento" />
-        <q-route-tab v-if="isAdmin" to="/reportes" label="Reportes" />
+
+        <!-- Panel de Administración -->
+        <q-btn-dropdown
+          flat
+          dense
+          label="Panel de Administración"
+          color="white"
+          menu-anchor="bottom left"
+          menu-self="top left"
+        >
+          <q-list style="min-width: 200px">
+            <q-item clickable v-ripple :to="{ name: 'admin-validar-comprobantes' }">
+              <q-item-section>Validar Comprobantes</q-item-section>
+            </q-item>
+            <q-item clickable v-ripple :to="{ name: 'reportes' }">
+              <q-item-section>Generar Reportes</q-item-section>
+            </q-item>
+            <q-item clickable v-ripple :to="{ name: 'admin-asignar-roles' }">
+              <q-item-section>Asignar Roles</q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
+
         <q-route-tab to="/logout" label="Cerrar sesión" />
       </q-tabs>
     </div>
-    <!-- Vista dinámica de páginas -->
+
+    <!-- CONTENEDOR DE PÁGINA -->
     <q-page-container>
       <div style="max-width: 1200px; margin: 0 auto; padding: 24px 16px; box-sizing: border-box">
         <router-view />
@@ -100,16 +119,13 @@ import { useAuthStore } from 'src/modules/auth/store'
 import { useRoute, useRouter } from 'vue-router'
 
 const auth = useAuthStore()
-const isAdmin = computed(() => auth.user?.role === 'admin')
 const route = useRoute()
 const router = useRouter()
 
-// Nombres de rutas donde la pestaña Retiro debe quedar activa
 const retiroRoutes = ['retiro', 'retiro-confirmar', 'retiro-exito']
-const isRetiroActive = computed(() => retiroRoutes.includes(route.name))
-
-// Nombres de rutas donde la pestaña Historial debe quedar activa
 const historialRoutes = ['historial', 'detalle-transaccion']
+
+const isRetiroActive = computed(() => retiroRoutes.includes(route.name))
 const isHistorialActive = computed(() => historialRoutes.includes(route.name))
 
 function goRetiro() {
@@ -118,12 +134,6 @@ function goRetiro() {
 
 function goHistorial() {
   router.push('/historial')
-}
-
-function mostrarRol(rol) {
-  if (rol === 'admin') return 'Administrador'
-  if (rol === 'gestor') return 'Gestor Actividad'
-  return rol.charAt(0).toUpperCase() + rol.slice(1)
 }
 </script>
 

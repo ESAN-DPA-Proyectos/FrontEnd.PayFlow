@@ -1,58 +1,64 @@
 <template>
   <div class="notificaciones-config q-pa-xl payflow-page-bg">
     <div class="row justify-center q-mt-xl">
-      <q-card flat bordered class="payflow-card-interactive tabla-notificaciones q-pa-xl">
+      <q-card flat bordered class="tabla-notificaciones q-pa-xl">
+        <div class="text-h6 text-primary q-mb-lg" style="font-size: 22px">
+          PANEL DE CONFIGURACION (NOTIFICACIONES)
+        </div>
         <div class="row q-col-gutter-xl q-mb-md">
-          <div class="col-12 flex items-center">
-            <div class="payflow-section-title">Notificaciones</div>
+          <div class="col-12">
+            <q-form>
+              <div class="row items-start">
+                <div class="col-6">
+                  <q-radio
+                    v-model="opcion"
+                    val="canales"
+                    label="CANALES DE NOTIFICACION"
+                    color="primary"
+                  />
+                  <div class="q-ml-xl q-mt-md" v-if="opcion === 'canales'">
+                    <q-checkbox
+                      v-model="canales.email"
+                      label="NOTIFICACIONES POR CORREO ELECTRONICO."
+                    />
+                    <q-checkbox
+                      v-model="canales.voz"
+                      label="NOTIFICACIONES POR MENSAJE DE VOZ."
+                      class="q-mt-md"
+                    />
+                    <q-checkbox
+                      v-model="canales.sms"
+                      label="NOTIFICACIONES POR SMS."
+                      class="q-mt-md"
+                    />
+                  </div>
+                </div>
+                <div class="col-6 flex items-center">
+                  <q-radio
+                    v-model="opcion"
+                    val="ninguna"
+                    label="NO RECIBIR NOTIFICACIONES."
+                    color="primary"
+                  />
+                </div>
+              </div>
+            </q-form>
           </div>
         </div>
-        <q-table
-          :rows="notificaciones.lista"
-          :columns="columns"
-          row-key="id"
-          flat
-          bordered
-          :pagination="{ rowsPerPage: 10 }"
-        >
-          <template #body-cell-estado="props">
-            <q-td :props="props">
-              <q-badge :color="badgeColor(props.row.estado)">
-                {{ props.row.estado }}
-              </q-badge>
-            </q-td>
-          </template>
-          <template #body-cell-leido="props">
-            <q-td :props="props">
-              <q-badge color="grey" v-if="props.row.leido">Leído</q-badge>
-              <q-badge color="red" v-else>Nuevo</q-badge>
-            </q-td>
-          </template>
-        </q-table>
       </q-card>
     </div>
   </div>
 </template>
 
 <script setup>
-import { useNotificacionesStore } from 'src/modules/notificaciones/store'
+import { ref } from 'vue'
 
-const notificaciones = useNotificacionesStore()
-
-const columns = [
-  { name: 'mensaje', label: 'Mensaje', field: 'mensaje', align: 'left' },
-  { name: 'tipo', label: 'Tipo', field: 'tipo', align: 'left' },
-  { name: 'fecha', label: 'Fecha', field: 'fecha', align: 'left' },
-  { name: 'hora', label: 'Hora', field: 'hora', align: 'left' },
-  { name: 'estado', label: 'Estado', field: 'estado', align: 'left' },
-  { name: 'leido', label: 'Atención', field: 'leido', align: 'left' },
-]
-
-function badgeColor(estado) {
-  if (estado === 'Aprobado') return 'green'
-  if (estado === 'Rechazado') return 'red'
-  return 'orange'
-}
+const opcion = ref('canales')
+const canales = ref({
+  email: false,
+  voz: false,
+  sms: false,
+})
 </script>
 
 <style scoped>
