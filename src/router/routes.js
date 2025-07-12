@@ -91,6 +91,18 @@ const routes = [
         name: 'logout',
         component: () => import('src/modules/auth/pages/LogoutPage.vue'),
       },
+
+      {
+        path: 'notificaciones',
+        name: 'notificaciones',
+        component: () => import('src/modules/notificaciones/pages/NotificacionesPage.vue'),
+      },
+
+      {
+        path: 'admin/eliminar-usuario',
+        name: 'admin-eliminar-usuario',
+        component: () => import('src/modules/admin/pages/EliminarUsuario.vue'),
+      },
     ],
   },
 
