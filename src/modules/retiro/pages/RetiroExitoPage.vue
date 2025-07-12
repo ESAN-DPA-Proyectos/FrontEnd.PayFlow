@@ -34,21 +34,34 @@
             </div>
             <div class="row payflow-row-interactive q-mb-sm q-py-xs">
               <div class="col-6 text-left text-grey-7 text-body2">Método de retiro</div>
-              <div class="col-6 text-right">{{ datosRetiro.metodo }}</div>
+              <div class="col-6 text-right">{{ datosRetiro.metodoRetiro }}</div>
             </div>
             <div class="row payflow-row-interactive q-mb-sm q-py-xs">
-              <div class="col-6 text-left text-grey-7 text-body2">Destino</div>
-              <div class="col-6 text-right">{{ datosRetiro.cuenta }}</div>
+              <div class="col-6 text-left text-grey-7 text-body2">Beneficiario</div>
+              <div class="col-6 text-right">{{ datosRetiro.beneficiario }}</div>
+            </div>
+            <div class="row payflow-row-interactive q-mb-sm q-py-xs">
+              <div class="col-6 text-left text-grey-7 text-body2">Cuenta CCI o celular</div>
+              <div class="col-6 text-right">{{ datosRetiro.cuentaDestino }}</div>
             </div>
             <div class="row payflow-row-interactive q-mb-sm q-py-xs">
               <div class="col-6 text-left text-grey-7 text-body2">Referencia</div>
               <div class="col-6 text-right text-bold" style="color: var(--payflow-primary)">
-                #RT-20250422-402
+                {{
+                  datosRetiro.transaccion?.id
+                    ? `#RT-${datosRetiro.transaccion.id}`
+                    : '#RT-20250422-402'
+                }}
               </div>
             </div>
             <div class="row payflow-row-interactive q-mb-sm q-py-xs">
               <div class="col-6 text-left text-grey-7 text-body2">Fecha y hora</div>
-              <div class="col-6 text-right">22/04/2025 - 12:30 p.m.</div>
+              <div class="col-6 text-right">
+                {{
+                  formatearFecha(datosRetiro.transaccion?.fechaCreacion) ||
+                  '22/04/2025 - 12:30 p.m.'
+                }}
+              </div>
             </div>
           </q-card-section>
           <q-separator />
@@ -89,6 +102,22 @@ function goHistorial() {
 
 function goInicio() {
   router.push({ name: 'home' })
+}
+
+function formatearFecha(fecha) {
+  if (!fecha) return ''
+  const date = new Date(fecha)
+  return (
+    date
+      .toLocaleDateString('es-PE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+      .replace(',', ' -') + ' p.m.'
+  )
 }
 </script>
 
