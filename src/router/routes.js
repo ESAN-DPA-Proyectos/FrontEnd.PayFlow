@@ -63,27 +63,26 @@ const routes = [
         name: 'detalle-transaccion',
         component: () => import('src/modules/historial/pages/DetalleTransaccionPage.vue'),
       },
+
+      // Panel de administración
       {
         path: 'admin',
         name: 'admin',
         component: () => import('src/modules/admin/pages/ValidarComprobantesPage.vue'),
       },
       {
-        path: 'mantenimiento',
-        name: 'mantenimiento',
-        component: () => import('src/modules/admin/pages/ValidacionAutomaticaPage.vue'),
-      },
-      {
         path: 'reportes',
         name: 'reportes',
         component: () => import('src/modules/reportes/pages/ValidacionReportesPage.vue'),
       },
-      {
-        path: 'notificaciones',
-        name: 'notificaciones',
-        component: () =>
-          import('src/modules/notificaciones/pages/ConfiguracionNotificacionesPage.vue'),
-      },
+
+      // Ruta disponible pero botón desactivado
+      // {
+      //   path: 'asignar-roles',
+      //   name: 'asignar-roles',
+      //   component: () => import('src/modules/admin/pages/AsignarRoles.vue'),
+      // },
+
       {
         path: 'logout',
         name: 'logout',
