@@ -93,102 +93,68 @@ async function buscar() {
         }
         nombreUsuario.value = ''
         dniUsuario.value = ''
-        try {
-          const errorData = await userResponse.json()
-          console.error('Error del servidor al buscar usuario:', errorData)
-          if (errorData.message) {
-            mensajeError.value += ` Detalles: ${errorData.message}`
-          }
-        } catch (parseError) {
-          console.error('No se pudo parsear el error del servidor al buscar usuario:', parseError)
-        }
         return
       }
 
       const userData = await userResponse.json()
       console.log('Respuesta completa del endpoint de usuario:', userData)
 
-      // Manejo de la respuesta si es un array o un objeto único
-      const user = Array.isArray(userData) && userData.length > 0 ? userData[0] : userData
+      const user = Array.isArray(userData) ? userData[0] : userData
 
-      if (user && typeof user === 'object' && user.nombre && user.apellido) {
+      if (user && typeof user === 'object' && 'idUsuario' in user) {
         nombreUsuario.value = `${user.apellido}, ${user.nombre}`
         dniUsuario.value = user.dni || busqueda.value
         if ($q && $q.notify)
           $q.notify({ type: 'positive', message: 'Usuario encontrado', timeout: 1000 })
 
-        // --- PASO 2: Buscar transacción específica (después de encontrar al usuario) ---
-        // ID de transacción hardcodeado según la solicitud
-        const transactionId = 26
-        const transactionEndpoint = `http://localhost:5283/api/v1/Transactions/${transactionId}`
+        // --- PASO 2: Usar IdUsuario para obtener transacciones del usuario ---
+        const transactionByUserEndpoint = `http://localhost:5283/api/v1/Transactions/Usu/${user.idUsuario}`
 
         try {
-          const transactionResponse = await fetch(transactionEndpoint)
+          const transactionResponse = await fetch(transactionByUserEndpoint)
 
           if (!transactionResponse.ok) {
             if (transactionResponse.status === 404) {
-              mensajeError.value = `No se encontró la transacción con ID ${transactionId}.`
+              mensajeError.value = `No se encontraron transacciones para el usuario ID ${user.idUsuario}.`
             } else {
-              mensajeError.value = `Error al obtener transacción (Código: ${transactionResponse.status}).`
+              mensajeError.value = `Error al obtener transacciones (Código: ${transactionResponse.status}).`
             }
-            rows.value = [] // Asegurarse de que la tabla esté vacía si hay error
+            rows.value = []
             return
           }
 
-          const transactionData = await transactionResponse.json()
-          console.log('Respuesta completa del endpoint de transacción:', transactionData)
+          const transactionsData = await transactionResponse.json()
+          console.log('Transacciones del usuario:', transactionsData)
 
-          // Asumiendo que el endpoint devuelve un solo objeto de transacción con las propiedades esperadas
-          if (
-            transactionData &&
-            typeof transactionData === 'object' &&
-            transactionData.idTransaccion &&
-            transactionData.concepto &&
-            transactionData.fechaRegistro &&
-            transactionData.monto &&
-            transactionData.estado
-          ) {
-            rows.value = [
-              {
-                operacion: transactionData.idTransaccion,
-                detalle: transactionData.concepto,
-                fecha: transactionData.fechaRegistro,
-                monto: transactionData.monto,
-                estado: transactionData.estado,
-                mantenimiento: '', // Campo para los botones de acción
-              },
-            ]
+          // Asegúrate de que sea un array y tenga datos
+          if (Array.isArray(transactionsData) && transactionsData.length > 0) {
+            rows.value = transactionsData.map((t) => ({
+              operacion: t.idTransaccion,
+              detalle: t.concepto,
+              fecha: t.fechaRegistro,
+              monto: t.monto,
+              estado: t.estado,
+              mantenimiento: '',
+            }))
             if ($q && $q.notify)
               $q.notify({
                 type: 'positive',
-                message: `Transacción ${transactionId} cargada`,
+                message: `${transactionsData.length} transacción(es) cargada(s)`,
                 timeout: 1000,
               })
           } else {
-            mensajeError.value = 'Formato de datos de transacción inesperado o faltan propiedades.'
+            mensajeError.value = 'No se encontraron transacciones válidas para este usuario.'
             rows.value = []
-            if ($q && $q.notify)
-              $q.notify({
-                type: 'warning',
-                message: 'Formato de datos de transacción inesperado',
-                timeout: 2000,
-              })
           }
         } catch (transactionErr) {
-          console.error('Error en fetch de transacción:', transactionErr)
-          mensajeError.value = 'Error de red o CORS al obtener la transacción.'
+          console.error('Error en fetch de transacciones:', transactionErr)
+          mensajeError.value = 'Error de red o CORS al obtener las transacciones.'
           rows.value = []
         }
       } else {
         nombreUsuario.value = ''
         dniUsuario.value = ''
-        mensajeError.value = 'Formato de datos de usuario inesperado: faltan "nombre" o "apellido".'
-        if ($q && $q.notify)
-          $q.notify({
-            type: 'warning',
-            message: 'Formato de datos de usuario inesperado',
-            timeout: 2000,
-          })
+        mensajeError.value = 'Formato de datos de usuario inesperado: falta "idUsuario".'
       }
     } catch (err) {
       console.error('Error en fetch general:', err)
