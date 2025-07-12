@@ -64,10 +64,10 @@ const routes = [
         component: () => import('src/modules/historial/pages/DetalleTransaccionPage.vue'),
       },
 
-      // Panel de administración
+      // Panel de administración (rutas corregidas)
       {
-        path: 'admin',
-        name: 'admin',
+        path: 'admin/validar-comprobantes',
+        name: 'admin-validar-comprobantes',
         component: () => import('src/modules/admin/pages/ValidarComprobantesPage.vue'),
       },
       {
@@ -75,23 +75,21 @@ const routes = [
         name: 'reportes',
         component: () => import('src/modules/reportes/pages/ValidacionReportesPage.vue'),
       },
-
-      // Ruta disponible pero botón desactivado
-      // {
-      //   path: 'asignar-roles',
-      //   name: 'asignar-roles',
-      //   component: () => import('src/modules/admin/pages/AsignarRoles.vue'),
-      // },
-
       {
-        path: 'logout',
-        name: 'logout',
-        component: () => import('src/modules/auth/pages/LogoutPage.vue'),
+        path: 'admin/asignar-roles',
+        name: 'admin-asignar-roles',
+        component: () => import('src/modules/admin/pages/AsignarRoles.vue'),
       },
       {
         path: 'validaciones',
         name: 'validaciones',
         component: () => import('src/modules/admin/pages/ValidacionesPage.vue'),
+      },
+
+      {
+        path: 'logout',
+        name: 'logout',
+        component: () => import('src/modules/auth/pages/LogoutPage.vue'),
       },
     ],
   },
