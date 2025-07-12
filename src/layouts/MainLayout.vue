@@ -52,7 +52,7 @@
       </div>
     </div>
 
-    <!-- Menú de navegación -->
+    <!-- MENÚ DE NAVEGACIÓN -->
     <div class="navbar-payflow" style="width: 100%; background: #0656b6">
       <q-tabs
         dense
@@ -88,14 +88,14 @@
           menu-self="top left"
         >
           <q-list style="min-width: 200px">
-            <q-item clickable to="/admin">
+            <q-item clickable v-ripple :to="{ name: 'admin-validar-comprobantes' }">
               <q-item-section>Validar Comprobantes</q-item-section>
             </q-item>
-            <q-item clickable to="/reportes">
+            <q-item clickable v-ripple :to="{ name: 'reportes' }">
               <q-item-section>Generar Reportes</q-item-section>
             </q-item>
-            <q-item disabled>
-              <q-item-section>Asignar Roles (inactivo)</q-item-section>
+            <q-item clickable v-ripple :to="{ name: 'admin-asignar-roles' }">
+              <q-item-section>Asignar Roles</q-item-section>
             </q-item>
           </q-list>
         </q-btn-dropdown>
@@ -104,7 +104,7 @@
       </q-tabs>
     </div>
 
-    <!-- Contenedor de página -->
+    <!-- CONTENEDOR DE PÁGINA -->
     <q-page-container>
       <div style="max-width: 1200px; margin: 0 auto; padding: 24px 16px; box-sizing: border-box">
         <router-view />
