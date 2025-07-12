@@ -1,5 +1,5 @@
 <template>
-  <div class="notificaciones-config q-pa-xl">
+  <div class="notificaciones-config q-pa-xl payflow-page-bg">
     <div class="row justify-center q-mt-xl">
       <q-card flat bordered class="tabla-notificaciones q-pa-xl">
         <div class="text-h6 text-primary q-mb-lg" style="font-size: 22px">

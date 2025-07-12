@@ -13,7 +13,7 @@
       <div
         style="
           display: flex;
-          align-items: center; /* Cambiado para centrar verticalmente */
+          align-items: center;
           width: 100%;
           justify-content: space-between;
           min-height: 100px;
@@ -33,48 +33,82 @@
             PAYFLOW
           </div>
         </div>
+
         <div style="display: flex; align-items: center; gap: 18px">
           <div
             style="display: flex; flex-direction: column; align-items: flex-end; text-align: right"
           >
-            <div style="font-size: 1.4rem; font-weight: 500; margin-bottom: 2px">
-              Bienvenido, {{ auth.user?.name || 'usuario' }}
-            </div>
-            <div style="font-size: 1.1rem; color: #7fd1e8; font-weight: 400; margin-bottom: 0">
-              {{ auth.user?.role ? mostrarRol(auth.user.role) : '' }}
+            <div style="font-size: 1.4rem; font-weight: 500; margin-bottom: 0">
+              Bienvenido, {{ auth.user?.nombre || 'usuario' }}
             </div>
           </div>
+
           <q-img
             src="src/assets/logo-payflow.png"
+            alt="Logo de Payflow"
             style="height: 96px; width: 96px; min-width: 96px; margin: 0"
           />
         </div>
       </div>
     </div>
+
     <!-- Menú de navegación -->
-    <div class="navbar-payflow">
+    <div class="navbar-payflow" style="width: 100%; background: #0656b6">
       <q-tabs
         dense
-        align="left"
+        align="center"
         active-color="white"
         indicator-color="white"
         narrow-indicator
         class="payflow-tabs"
-        style="margin-left: 0"
+        style="min-width: 700px"
       >
-        <q-route-tab to="/" label="Inicio" />
+        <q-route-tab to="/" label="Inicio" exact />
         <q-route-tab to="/deposito" label="Depósito" />
-        <q-route-tab to="/retiro" label="Retiro" />
-        <q-route-tab to="/historial" label="Historial" />
-        <q-route-tab v-if="isAdmin" to="/validaciones" label="Validaciones" />
-        <q-route-tab v-if="isAdmin" to="/mantenimiento" label="Mantenimiento" />
-        <q-route-tab v-if="isAdmin" to="/reportes" label="Reportes" />
+        <q-tab
+          label="Retiro"
+          :active="isRetiroActive"
+          @click="goRetiro"
+          active-class="q-tab--active"
+        />
+        <q-tab
+          label="Historial"
+          :active="isHistorialActive"
+          @click="goHistorial"
+          active-class="q-tab--active"
+        />
+
+        <!-- Panel de Administración -->
+        <q-btn-dropdown
+          flat
+          dense
+          label="Panel de Administración"
+          color="white"
+          menu-anchor="bottom left"
+          menu-self="top left"
+        >
+          <q-list style="min-width: 200px">
+            <q-item clickable to="/admin">
+              <q-item-section>Validar Comprobantes</q-item-section>
+            </q-item>
+            <q-item clickable to="/reportes">
+              <q-item-section>Generar Reportes</q-item-section>
+            </q-item>
+            <q-item disabled>
+              <q-item-section>Asignar Roles (inactivo)</q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
+
         <q-route-tab to="/logout" label="Cerrar sesión" />
       </q-tabs>
     </div>
-    <!-- Vista dinámica de páginas -->
+
+    <!-- Contenedor de página -->
     <q-page-container>
-      <router-view />
+      <div style="max-width: 1200px; margin: 0 auto; padding: 24px 16px; box-sizing: border-box">
+        <router-view />
+      </div>
     </q-page-container>
   </q-layout>
 </template>
@@ -82,17 +116,39 @@
 <script setup>
 import { computed } from 'vue'
 import { useAuthStore } from 'src/modules/auth/store'
+import { useRoute, useRouter } from 'vue-router'
 
 const auth = useAuthStore()
-const isAdmin = computed(() => auth.user?.role === 'admin')
+const route = useRoute()
+const router = useRouter()
 
-function mostrarRol(rol) {
-  if (rol === 'admin') return 'Administrador'
-  if (rol === 'gestor') return 'Gestor Actividad'
-  return rol.charAt(0).toUpperCase() + rol.slice(1)
+const retiroRoutes = ['retiro', 'retiro-confirmar', 'retiro-exito']
+const historialRoutes = ['historial', 'detalle-transaccion']
+
+const isRetiroActive = computed(() => retiroRoutes.includes(route.name))
+const isHistorialActive = computed(() => historialRoutes.includes(route.name))
+
+function goRetiro() {
+  router.push('/retiro')
+}
+
+function goHistorial() {
+  router.push('/historial')
 }
 </script>
 
 <style lang="scss">
-@import 'src/css/payflow-figma.scss';
+.btn-payflow {
+  background: #004b8d !important;
+  color: #fff !important;
+  font-weight: 500;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
+  transition: background 0.2s;
+}
+.btn-payflow:hover,
+.btn-payflow:focus {
+  background: #00396b !important;
+  color: #fff !important;
+}
 </style>
