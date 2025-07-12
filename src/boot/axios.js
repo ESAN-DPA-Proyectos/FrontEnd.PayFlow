@@ -1,13 +1,31 @@
 import { defineBoot } from '#q-app/wrappers'
 import axios from 'axios'
 
-// Be careful when using SSR for cross-request state pollution
-// due to creating a Singleton instance here;
-// If any client changes this (global) instance, it might be a
-// good idea to move this instance creation inside of the
-// "export default () => {}" function below (which runs individually
-// for each client)
-const api = axios.create({ baseURL: 'https://api.example.com' })
+// Configuración para el backend de PayFlow
+const api = axios.create({
+  baseURL: 'http://localhost:5283/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+// Interceptor para manejar respuestas
+api.interceptors.response.use(
+  (response) => {
+    console.log('✅ API Response:', response.config.url, response.status)
+    return response
+  },
+  (error) => {
+    console.error('❌ API Error:', error.config?.url, error.response?.status, error.message)
+
+    // Manejar errores específicos
+    if (error.code === 'ERR_NETWORK') {
+      console.error('🔌 Network Error: Backend no disponible en', error.config?.baseURL)
+    }
+
+    return Promise.reject(error)
+  },
+)
 
 export default defineBoot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
