@@ -90,7 +90,7 @@ const columnas = [
 
 onMounted(async () => {
   try {
-    const res = await api.get('/api/notificaciones')
+    const res = await api.get('/notificaciones')
     notificaciones.value = res.data
   } catch (err) {
     console.error('Error al cargar notificaciones:', err)

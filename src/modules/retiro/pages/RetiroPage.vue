@@ -73,9 +73,14 @@ export default {
   },
 
   // Limpiar formulario al entrar a la página
-  mounted() {
+  async mounted() {
     console.log('🧹 Limpiando formulario al cargar página de retiro')
     this.retiroStore.limpiarFormulario()
+    
+    // Cargar fondos desde la base de datos
+    console.log('📂 Cargando fondos disponibles para retiro...')
+    await this.retiroStore.cargarFondos()
+    console.log('✅ Fondos cargados en el store:', this.retiroStore.fondosDisponibles)
   },
 
   computed: {

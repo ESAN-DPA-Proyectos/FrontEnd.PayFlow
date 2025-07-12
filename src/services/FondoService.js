@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { api } from 'src/boot/axios'
 
 class FondoService {
   /**
@@ -6,9 +6,9 @@ class FondoService {
    */
   async getAllFondos() {
     try {
-      console.log('📂 FondoService: Iniciando petición a /api/v1/Funds...')
+      console.log('📂 FondoService: Iniciando petición a /v1/Funds...')
       
-      const response = await axios.get('/api/v1/Funds')
+      const response = await api.get('/v1/Funds')
       
       console.log('📂 FondoService: Respuesta exitosa:', response.status)
       console.log('📂 FondoService: Respuesta completa:', response)
@@ -64,7 +64,7 @@ class FondoService {
     try {
       console.log('📂 Creando nuevo fondo:', fondoData)
       
-      const response = await axios.post('/api/v1/Funds', fondoData)
+      const response = await api.post('/v1/Funds', fondoData)
       
       console.log('✅ Fondo creado exitosamente:', response.data)
       return response.data
@@ -81,7 +81,7 @@ class FondoService {
     try {
       console.log('📂 Actualizando fondo ID:', id, fondoData)
       
-      const response = await axios.put(`/api/v1/Funds/${id}`, fondoData)
+      const response = await api.put(`/v1/Funds/${id}`, fondoData)
       
       console.log('✅ Fondo actualizado exitosamente:', response.data)
       return response.data
@@ -98,7 +98,7 @@ class FondoService {
     try {
       console.log('📂 Eliminando fondo ID:', id)
       
-      const response = await axios.delete(`/api/v1/Funds/${id}`)
+      const response = await api.delete(`/v1/Funds/${id}`)
       
       console.log('✅ Fondo eliminado exitosamente')
       return response.data
@@ -173,7 +173,7 @@ class FondoService {
     try {
       console.log('📂 Obteniendo fondo por ID:', id)
       
-      const response = await axios.get(`/api/v1/Funds/${id}`)
+      const response = await api.get(`/v1/Funds/${id}`)
       
       console.log('✅ Fondo encontrado:', response.data)
       return response.data

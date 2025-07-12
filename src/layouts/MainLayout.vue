@@ -126,7 +126,7 @@ const tieneNotificaciones = ref(false)
 
 onMounted(async () => {
   try {
-    const { data } = await api.get('/api/notificaciones')
+    const { data } = await api.get('/notificaciones')
     tieneNotificaciones.value = (data.length || 0) > 0
   } catch {
     // Si hay error, asumimos que no hay notificaciones pendientes

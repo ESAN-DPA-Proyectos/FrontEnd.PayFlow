@@ -136,7 +136,7 @@ function onFieldsChange(val) {
 onMounted(async () => {
   try {
     cargando.value = true
-    const { data } = await api.get('/api/v1/transactions')
+    const { data } = await api.get('/v1/transactions')
     todasTransacciones.value = data
   } catch (err) {
     console.error('Error al cargar transacciones:', err)

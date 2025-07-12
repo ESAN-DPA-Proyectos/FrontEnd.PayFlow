@@ -54,7 +54,7 @@ export class TransactionService {
     try {
       console.log('🔄 Intentando conectar a la base de datos...')
       // Nota: El endpoint correcto tiene "T" mayúscula según Swagger
-      const response = await api.get('/api/v1/Transactions')
+      const response = await api.get('/v1/Transactions')
       
       console.log('✅ Datos recibidos de BD:', response.data)
       console.log('📊 Total de transacciones encontradas:', response.data.length)
@@ -115,7 +115,7 @@ export class TransactionService {
    */
   static async getTransactionById(id) {
     try {
-      const response = await api.get(`/api/v1/Transactions/${id}`)
+      const response = await api.get(`/v1/Transactions/${id}`)
       return response.data
     } catch (error) {
       console.error('Error al obtener transacción por ID:', error)
@@ -131,7 +131,7 @@ export class TransactionService {
    */
   static async createTransaction(transactionData) {
     try {
-      const response = await api.post('/api/v1/Transactions', transactionData)
+      const response = await api.post('/v1/Transactions', transactionData)
       return response.data
     } catch (error) {
       console.error('Error al crear transacción:', error)
@@ -147,7 +147,7 @@ export class TransactionService {
    */
   static async updateTransaction(id, transactionData) {
     try {
-      await api.put(`/api/v1/Transactions/${id}`, transactionData)
+      await api.put(`/v1/Transactions/${id}`, transactionData)
       return true
     } catch (error) {
       console.error('Error al actualizar transacción:', error)
@@ -165,7 +165,7 @@ export class TransactionService {
       const formData = new FormData()
       formData.append('file', file)
       
-      const response = await api.post('/api/v1/Transactions/upload-comprobante', formData, {
+      const response = await api.post('/v1/Transactions/upload-comprobante', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -193,7 +193,7 @@ export class TransactionService {
       if (filters.fechaHasta) params.append('fechaHasta', filters.fechaHasta)
       if (filters.fondo) params.append('fondo', filters.fondo)
       
-      const response = await api.get(`/api/v1/Transactions?${params.toString()}`)
+      const response = await api.get(`/v1/Transactions?${params.toString()}`)
       return response.data
     } catch (error) {
       console.error('Error al filtrar transacciones:', error)
@@ -209,7 +209,7 @@ export class TransactionService {
    */
   static async getTransactionTracking(transactionId) {
     try {
-      const response = await api.get(`/api/v1/Transactions/${transactionId}/tracking`)
+      const response = await api.get(`/v1/Transactions/${transactionId}/tracking`)
       return response.data
     } catch (error) {
       console.error('Error al obtener seguimiento de transacción:', error)
