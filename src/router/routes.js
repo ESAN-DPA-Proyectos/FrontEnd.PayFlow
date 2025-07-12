@@ -47,6 +47,11 @@ const routes = [
         component: () => import('src/modules/deposito/pages/DepositoPage.vue'),
       },
       {
+        path: 'deposito-exito',
+        name: 'deposito-exito',
+        component: () => import('src/modules/deposito/pages/DepositoExitoPage.vue'),
+      },
+      {
         path: 'retiro',
         name: 'retiro',
         component: () => import('src/modules/retiro/pages/RetiroPage.vue'),
@@ -71,9 +76,11 @@ const routes = [
         name: 'detalle-transaccion',
         component: () => import('src/modules/historial/pages/DetalleTransaccionPage.vue'),
       },
+
+      // Panel de administración (rutas corregidas)
       {
-        path: 'admin',
-        name: 'admin',
+        path: 'admin/validar-comprobantes',
+        name: 'admin-validar-comprobantes',
         component: () => import('src/modules/admin/pages/ValidarComprobantesPage.vue'),
       },
       {
@@ -92,15 +99,32 @@ const routes = [
         component: () => import('src/modules/reportes/pages/ValidacionReportesPage.vue'),
       },
       {
-        path: 'notificaciones',
-        name: 'notificaciones',
-        component: () =>
-          import('src/modules/notificaciones/pages/ConfiguracionNotificacionesPage.vue'),
+        path: 'admin/asignar-roles',
+        name: 'admin-asignar-roles',
+        component: () => import('src/modules/admin/pages/AsignarRoles.vue'),
       },
+      {
+        path: 'validaciones',
+        name: 'validaciones',
+        component: () => import('src/modules/admin/pages/ValidacionesPage.vue'),
+      },
+
       {
         path: 'logout',
         name: 'logout',
         component: () => import('src/modules/auth/pages/LogoutPage.vue'),
+      },
+
+      {
+        path: 'notificaciones',
+        name: 'notificaciones',
+        component: () => import('src/modules/notificaciones/pages/NotificacionesPage.vue'),
+      },
+
+      {
+        path: 'admin/eliminar-usuario',
+        name: 'admin-eliminar-usuario',
+        component: () => import('src/modules/admin/pages/EliminarUsuario.vue'),
       },
     ],
   },

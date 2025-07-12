@@ -41,7 +41,12 @@ api.interceptors.response.use(
     return Promise.reject(error)
   },
 )
-
+//     console.error('❌ API Error:', error.config?.url, error.response?.status, error.message)
+//
+//     // Manejar errores específicos
+//     if (error.code === 'ERR_NETWORK') {
+//      console.error('🔌 Network Error: Backend no disponible en', error.config?.baseURL)
+//     }
 export default defineBoot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
