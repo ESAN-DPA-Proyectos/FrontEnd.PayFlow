@@ -17,6 +17,19 @@ const routes = [
     ],
   },
 
+  // Ruta temporal para testing del historial (sin autenticación)
+  {
+    path: '/test-historial',
+    component: () => import('src/layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'test-historial',
+        component: () => import('src/modules/historial/pages/HistorialPage.vue'),
+      },
+    ],
+  },
+
   // Rutas protegidas bajo MainLayout
   {
     path: '/',
@@ -62,6 +75,11 @@ const routes = [
         path: 'admin',
         name: 'admin',
         component: () => import('src/modules/admin/pages/ValidarComprobantesPage.vue'),
+      },
+      {
+        path: 'admin/fondos',
+        name: 'admin-fondos',
+        component: () => import('src/modules/admin/pages/AdminFondosPage.vue'),
       },
       {
         path: 'mantenimiento',

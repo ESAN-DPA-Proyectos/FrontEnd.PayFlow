@@ -80,6 +80,7 @@
           active-class="q-tab--active"
         />
         <q-route-tab v-if="isAdmin" to="/validaciones" label="Validaciones" />
+        <q-route-tab v-if="isAdmin" to="/admin/fondos" label="Gestión Fondos" />
         <q-route-tab v-if="isAdmin" to="/mantenimiento" label="Mantenimiento" />
         <q-route-tab v-if="isAdmin" to="/reportes" label="Reportes" />
         <q-route-tab to="/logout" label="Cerrar sesión" />

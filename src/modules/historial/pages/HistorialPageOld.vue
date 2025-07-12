@@ -333,100 +333,25 @@ async function aplicarFiltros() {
   loading.value = true
   try {
     console.log('🔍 Aplicando filtros...')
-    console.log('🔍 Filtros seleccionados:', {
-      fondo: fondoSeleccionado.value,
-      fechaDesde: fechaDesde.value,
-      fechaHasta: fechaHasta.value,
-      tipo: tipoSeleccionado.value,
-      estado: estadoSeleccionado.value,
-      usuario: usuarioSeleccionado.value
-    })
     
-    // Debug específico para fechas
-    console.log('🔍 DEBUG fechas:')
-    console.log('  - fechaDesde.value:', fechaDesde.value, typeof fechaDesde.value)
-    console.log('  - fechaHasta.value:', fechaHasta.value, typeof fechaHasta.value)
-    console.log('  - Son iguales?:', fechaDesde.value === fechaHasta.value)
-    console.log('  - Ambas tienen valor?:', !!fechaDesde.value && !!fechaHasta.value)
+    // Obtener todas las transacciones primero
+    const todasLasTransacciones = await TransactionService.getAllTransactionsWithFondo()
     
-    // Obtener todas las transacciones con fondos asignados
-    await cargarTransaccionesDesdeDB()
+    // Aplicar filtros localmente
+    let transaccionesFiltradas = todasLasTransacciones
     
-    // Aplicar filtros localmente sobre los datos ya cargados
-    let transaccionesFiltradas = [...rows.value]
-    
-    // Filtro por fondo
-    if (fondoSeleccionado.value && fondoSeleccionado.value.value) {
-      const fondoId = fondoSeleccionado.value.value
-      const fondoNombre = fondoSeleccionado.value.label
-      console.log(`📂 Filtrando por fondo: ${fondoNombre} (ID: ${fondoId})`)
-      
-      transaccionesFiltradas = transaccionesFiltradas.filter(t => {
-        const coincide = t.fondo === fondoNombre || t.nombreFondo === fondoNombre
-        console.log(`  - Transacción ${t.referencia}: fondo="${t.fondo}", nombreFondo="${t.nombreFondo}", coincide=${coincide}`)
-        return coincide
-      })
+    if (fondoSeleccionado.value) {
+      transaccionesFiltradas = transaccionesFiltradas.filter(t => 
+        t.idFondo === fondoSeleccionado.value
+      )
+      console.log(`📂 Filtro por fondo ID: ${fondoSeleccionado.value}`)
     }
     
-    // Filtros de fecha con debugging mejorado
-    console.log('📅 Iniciando filtros de fecha...')
-    console.log('  - fechaDesde.value:', fechaDesde.value)
-    console.log('  - fechaHasta.value:', fechaHasta.value)
-    
-    // Si solo hay fecha "desde" o ambas fechas son iguales, tratar como día específico
-    const esFiltroEspecifico = fechaDesde.value && (
-      !fechaHasta.value || 
-      fechaDesde.value === fechaHasta.value
-    )
-    
-    if (esFiltroEspecifico) {
-      const fechaTarget = fechaDesde.value
-      console.log(`📅 FILTRO DE DÍA ESPECÍFICO: ${fechaTarget}`)
-      transaccionesFiltradas = transaccionesFiltradas.filter(t => {
-        const fechaTransaccion = new Date(t.fechaRegistro || t.fecha)
-        const fechaTxnString = fechaTransaccion.toISOString().split('T')[0]
-        
-        const coincide = fechaTxnString === fechaTarget
-        console.log(`  ✓ Transacción ${t.referencia}: fecha=${fechaTxnString}, target=${fechaTarget}, INCLUIR=${coincide}`)
-        return coincide
-      })
-    } else {
-      console.log('📅 FILTRO DE RANGO DE FECHAS')
-      // Aplicar filtros de rango de fechas normal
-      if (fechaDesde.value) {
-        console.log(`📅 Filtrando desde: ${fechaDesde.value}`)
-        transaccionesFiltradas = transaccionesFiltradas.filter(t => {
-          const fechaTransaccion = new Date(t.fechaRegistro || t.fecha)
-          const fechaTxnString = fechaTransaccion.toISOString().split('T')[0]
-          
-          const fechaFiltroNormalizada = fechaDesde.value
-          
-          const coincide = fechaTxnString >= fechaFiltroNormalizada
-          console.log(`  - Transacción ${t.referencia}: fecha=${fechaTxnString}, filtroDesde=${fechaFiltroNormalizada}, incluida=${coincide}`)
-          return coincide
-        })
-      }
-      
-      if (fechaHasta.value) {
-        console.log(`📅 Filtrando hasta: ${fechaHasta.value}`)
-        transaccionesFiltradas = transaccionesFiltradas.filter(t => {
-          const fechaTransaccion = new Date(t.fechaRegistro || t.fecha)
-          const fechaTxnString = fechaTransaccion.toISOString().split('T')[0]
-          
-          const fechaFiltroNormalizada = fechaHasta.value
-          
-          const coincide = fechaTxnString <= fechaFiltroNormalizada
-          console.log(`  - Transacción ${t.referencia}: fecha=${fechaTxnString}, filtroHasta=${fechaFiltroNormalizada}, incluida=${coincide}`)
-          return coincide
-        })
-      }
-    }
-
     if (tipoSeleccionado.value) {
       transaccionesFiltradas = transaccionesFiltradas.filter(t => 
         t.tipo === tipoSeleccionado.value
       )
-      console.log(`� Filtro por tipo: ${tipoSeleccionado.value}`)
+      console.log(`📋 Filtro por tipo: ${tipoSeleccionado.value}`)
     }
     
     if (estadoSeleccionado.value) {
@@ -438,25 +363,47 @@ async function aplicarFiltros() {
     
     if (usuarioSeleccionado.value) {
       transaccionesFiltradas = transaccionesFiltradas.filter(t => 
-        t.usuario === usuarioSeleccionado.value
+        t.origenRol === usuarioSeleccionado.value
       )
-      console.log(`� Filtro por usuario: ${usuarioSeleccionado.value}`)
+      console.log(`👤 Filtro por usuario: ${usuarioSeleccionado.value}`)
     }
     
-    // Actualizar la tabla con los resultados filtrados
+    if (fechaDesde.value) {
+      transaccionesFiltradas = transaccionesFiltradas.filter(t => 
+        new Date(t.fechaRegistro) >= new Date(fechaDesde.value)
+      )
+      console.log(`📅 Filtro desde: ${fechaDesde.value}`)
+    }
+    
+    if (fechaHasta.value) {
+      transaccionesFiltradas = transaccionesFiltradas.filter(t => 
+        new Date(t.fechaRegistro) <= new Date(fechaHasta.value)
+      )
+      console.log(`📅 Filtro hasta: ${fechaHasta.value}`)
+    }
+    
+    // Transformar resultados
     rows.value = transaccionesFiltradas
+      .map(t => ({
+        tipo: t.tipo || 'N/A',
+        fecha: t.fechaRegistro ? TransactionService.formatFecha(t.fechaRegistro) : 'Sin fecha',
+        referencia: t.referencia || `TXN-${t.idTransaccion}`,
+        monto: (t.monto || 0).toString(),
+        usuario: t.origenRol || 'N/A',
+        estado: t.estado || 'N/A',
+        fondo: t.fondo || 'Fondo General',
+        id: t.idTransaccion,
+        fechaRegistro: t.fechaRegistro,
+        idFondo: t.idFondo
+      }))
+      .sort((a, b) => new Date(b.fechaRegistro || 0) - new Date(a.fechaRegistro || 0))
     
     console.log(`✅ Filtros aplicados: ${rows.value.length} transacciones encontradas`)
-    console.log('📊 Transacciones filtradas:', rows.value.map(t => ({
-      ref: t.referencia,
-      fecha: t.fecha,
-      fondo: t.fondo || t.nombreFondo
-    })))
-    
     estadoConexion.value = `🔍 ${rows.value.length} transacciones filtradas`
   } catch (error) {
     console.error('❌ Error al aplicar filtros:', error)
     estadoConexion.value = `❌ Error en filtros: ${error.message}`
+    rows.value = []
   } finally {
     loading.value = false
   }
