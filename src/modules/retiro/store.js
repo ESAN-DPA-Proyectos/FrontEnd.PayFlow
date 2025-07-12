@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { RetiroService } from 'src/services/RetiroService'
+import FondoService from 'src/services/FondoService'
 
 export const useRetiroStore = defineStore('retiro', {
   state: () => ({
@@ -22,7 +23,7 @@ export const useRetiroStore = defineStore('retiro', {
     historialRetiros: [],
 
     // Configuración
-    fondosDisponibles: ['Fondo 1', 'Fondo 2', 'Fondo 3'],
+    fondosDisponibles: [],
     metodosRetiro: ['Cuenta bancaria', 'Plin', 'Yape'],
   }),
 
@@ -218,6 +219,31 @@ export const useRetiroStore = defineStore('retiro', {
       return {
         valido: errores.length === 0,
         errores,
+      }
+    },
+
+    // Cargar fondos desde la base de datos
+    async cargarFondos() {
+      try {
+        console.log('📂 Cargando fondos desde BD para retiro...')
+        const fondosData = await FondoService.getAllFondos()
+        console.log('📂 Fondos recibidos:', fondosData)
+        
+        // Asegurar que fondosData es un array
+        const fondosArray = Array.isArray(fondosData) ? fondosData : []
+        
+        // Formatear fondos para el select
+        this.fondosDisponibles = FondoService.formatFondosForSelect(fondosArray)
+        console.log('✅ Fondos formateados para retiro:', this.fondosDisponibles)
+        
+        return this.fondosDisponibles
+      } catch (error) {
+        console.error('❌ Error al cargar fondos para retiro:', error)
+        // Usar fondos por defecto en caso de error
+        const fondosDefecto = FondoService.getFondosDefecto()
+        this.fondosDisponibles = FondoService.formatFondosForSelect(fondosDefecto)
+        console.log('⚠️ Usando fondos por defecto para retiro:', this.fondosDisponibles)
+        return this.fondosDisponibles
       }
     },
   },

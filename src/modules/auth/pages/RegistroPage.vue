@@ -78,7 +78,7 @@
 import { BtnPayflow } from 'src/components/atomos'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import axios from 'axios'
+import { api } from 'src/boot/axios'
 import 'src/css/payflow-figma.scss'
 
 const name = ref('')
@@ -121,7 +121,7 @@ async function register() {
       fechaRegistro: new Date().toISOString(),
       estado: 'Activo',
     }
-    await axios.post('http://localhost:5283/api/Usuarios', body)
+    await api.post('/Usuarios', body)
     alert('Usuario registrado correctamente.')
     router.push({ name: 'login' })
   } catch (error) {

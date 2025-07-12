@@ -59,7 +59,7 @@ async function login() {
   }
 
   try {
-    const { data } = await api.post('/api/Usuarios/login', {
+    const { data } = await api.post('/Usuarios/login', {
       usuario: username.value,
       contrasena: password.value,
     })

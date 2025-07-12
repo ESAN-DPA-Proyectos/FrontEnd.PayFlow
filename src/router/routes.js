@@ -30,6 +30,19 @@ const routes = [
     ],
   },
 
+  // Ruta temporal para testing del retiro (sin autenticación)
+  {
+    path: '/test-retiro',
+    component: () => import('src/layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'test-retiro',
+        component: () => import('src/modules/retiro/pages/RetiroPage.vue'),
+      },
+    ],
+  },
+
   // Rutas protegidas bajo MainLayout
   {
     path: '/',
@@ -127,6 +140,12 @@ const routes = [
         component: () => import('src/modules/admin/pages/EliminarUsuario.vue'),
       },
     ],
+  },
+
+  // Ruta raíz - redirigir al login
+  {
+    path: '/',
+    redirect: '/auth/login'
   },
 
   // Ruta desconocida (404)

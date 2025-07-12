@@ -153,7 +153,7 @@ const filteredTransactions = computed(() => {
 // Obtener transacciones del backend
 onMounted(async () => {
   try {
-    const response = await api.get('/api/v1/transactions')
+    const response = await api.get('/v1/transactions')
     allTransactions.value = response.data
   } catch (error) {
     console.error('Error al obtener transacciones:', error)
