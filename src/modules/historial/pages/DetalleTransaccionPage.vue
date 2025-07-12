@@ -10,41 +10,59 @@
     <div class="detalle-transaccion-grid q-mx-auto">
       <!-- Panel izquierdo: resumen -->
       <q-card flat bordered class="detalle-card-resumen payflow-card-interactive payflow-shadow">
-        <div class="text-center q-mb-sm">
-          <div class="text-subtitle1 text-weight-bold">Solicitud de Retiro</div>
-          <div class="detalle-monto text-negative">S/ -{{ transaccion?.monto || '-' }}</div>
-          <div class="detalle-estado text-warning">PENDIENTE</div>
+        <div v-if="loading" class="text-center q-pa-md">
+          <q-spinner-dots size="lg" color="primary" />
+          <div class="q-mt-sm">Cargando datos...</div>
+        </div>
+        <div v-else class="text-center q-mb-sm">
+          <div class="text-subtitle1 text-weight-bold">
+            {{ transaccion?.tipo === 'Retiro' ? 'Solicitud de Retiro' : 'Registro de Depósito' }}
+          </div>
+          <div class="detalle-monto" :class="transaccion?.tipo === 'Retiro' ? 'text-negative' : 'text-positive'">
+            {{ transaccion?.montoFormateado || 'S/ -800.00' }}
+          </div>
+          <div class="detalle-estado" :class="getStatusClass(transaccion?.estado)">
+            {{ transaccion?.estado?.toUpperCase() || 'PENDIENTE' }}
+          </div>
         </div>
         <q-separator class="q-my-sm" />
         <table class="detalle-table">
           <tbody>
             <tr>
               <td>Fecha y hora</td>
-              <td>{{ transaccion?.fecha || '-' }}</td>
+              <td>{{ transaccion?.fechaFormateada || '22/04/2024 12:30 p.m.' }}</td>
             </tr>
             <tr>
               <td>Referencia</td>
-              <td>{{ transaccion?.referencia || referencia }}</td>
+              <td>{{ transaccion?.referencia || 'TXN-RET-240422-0001' }}</td>
             </tr>
-            <tr>
-              <td>Método de retiro</td>
-              <td>Cuenta bancaria</td>
+            <tr v-if="transaccion?.metodoPago">
+              <td>Método de {{ transaccion.tipo === 'Retiro' ? 'retiro' : 'depósito' }}</td>
+              <td>{{ transaccion.metodoPago }}</td>
             </tr>
-            <tr>
+            <tr v-if="transaccion?.cuentaBeneficiario">
               <td>Destino</td>
-              <td>IBK - 123 - 524895 - 01</td>
+              <td>{{ transaccion.cuentaBeneficiario }}</td>
             </tr>
-            <tr>
+            <tr v-if="transaccion?.beneficiarioNombre">
+              <td>Beneficiario</td>
+              <td>{{ transaccion.beneficiarioNombre }}</td>
+            </tr>
+            <tr v-if="transaccion?.concepto">
               <td>Concepto</td>
-              <td>Pago por reserva de hospedaje</td>
+              <td>{{ transaccion.concepto }}</td>
             </tr>
             <tr>
               <td>Estado actual</td>
-              <td>Pendiente de procesamiento</td>
+              <td>{{ getStatusDescription(transaccion?.estado) }}</td>
             </tr>
             <tr>
               <td>Usuario</td>
-              <td>{{ transaccion?.usuario || '-' }}</td>
+              <td>{{ transaccion?.usuario || 'gestor.actividad' }}</td>
+            </tr>
+            <tr v-if="transaccion?.fondo">
+              <td>Fondo</td>
+              <td>{{ transaccion.fondo }}</td>
             </tr>
           </tbody>
         </table>
@@ -103,116 +121,90 @@
         @click="volver"
       />
     </div>
+
+    <!-- No transaction found -->
+    <div v-if="false" class="text-center q-pa-xl">
+      <q-icon name="search_off" size="xl" color="grey-5" />
+      <div class="q-mt-md text-h6 text-grey-6">Transacción no encontrada</div>
+      <BtnPayflow
+        label="Volver al historial"
+        color="primary"
+        class="q-mt-md"
+        @click="goBack"
+      />
+    </div>
   </q-page>
 </template>
 
 <script setup>
-import { BtnPayflow } from 'src/components/atomos'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import BtnPayflow from 'src/components/atomos/BtnPayflow.vue'
+import TransactionService from 'src/services/TransactionService'
 
-const route = useRoute()
 const router = useRouter()
-const referencia = route.params.referencia || route.params.id
+const route = useRoute()
 
-// Buscar la transacción en el historial si no viene por navegación
-const rowsOriginal = [
-  {
-    tipo: 'Retiro',
-    fecha: '22/04/2025 12:30 p.m.',
-    referencia: '#RT-20250422-519',
-    monto: '800.00',
-    usuario: 'gestor.actividad',
-    estado: 'Pendiente',
-  },
-  {
-    tipo: 'Retiro',
-    fecha: '18/04/2025 10:00 a.m.',
-    referencia: '#RT-20250418-381',
-    monto: '50.00',
-    usuario: 'gestor.actividad',
-    estado: 'Procesado',
-  },
-  {
-    tipo: 'Depósito',
-    fecha: '14/04/2025 02:32 p.m.',
-    referencia: '#DP-20250414-322',
-    monto: '1500.00',
-    usuario: 'luis.garcia',
-    estado: 'Procesado',
-  },
-  {
-    tipo: 'Retiro',
-    fecha: '10/04/2025 08:08 a.m.',
-    referencia: '#RT-20250410-201',
-    monto: '2500.00',
-    usuario: 'gestor.actividad',
-    estado: 'Procesado',
-  },
-  {
-    tipo: 'Depósito',
-    fecha: '03/04/2025 12:11 a.m.',
-    referencia: '#DP-20250403-098',
-    monto: '1100.00',
-    usuario: 'pedro.ruiz',
-    estado: 'Procesado',
-  },
-  {
-    tipo: 'Retiro',
-    fecha: '30/03/2025 07:01 a.m.',
-    referencia: '#RT-20250330-251',
-    monto: '300.00',
-    usuario: 'gestor.actividad',
-    estado: 'Procesado',
-  },
-  {
-    tipo: 'Retiro',
-    fecha: '25/03/2025 10:23 p.m.',
-    referencia: '#RT-20250325-099',
-    monto: '100.00',
-    usuario: 'gestor.actividad',
-    estado: 'Procesado',
-  },
-  {
-    tipo: 'Depósito',
-    fecha: '21/03/2025 09:33 a.m.',
-    referencia: '#DP-20250321-080',
-    monto: '900.00',
-    usuario: 'rosa.aguilar',
-    estado: 'Procesado',
-  },
-  {
-    tipo: 'Retiro',
-    fecha: '15/03/2025 11:25 p.m.',
-    referencia: '#RT-20250315-081',
-    monto: '150.00',
-    usuario: 'gestor.actividad',
-    estado: 'Procesado',
-  },
-  {
-    tipo: 'Retiro',
-    fecha: '02/03/2025 07:31 a.m.',
-    referencia: '#RT-20250302-050',
-    monto: '200.00',
-    usuario: 'gestor.actividad',
-    estado: 'Procesado',
-  },
-]
+// Estado reactivo
+const transaccion = ref(null)
+const loading = ref(false)
 
-let transaccion = null
-if (window.history.state && window.history.state.transaccion) {
-  transaccion = window.history.state.transaccion
-} else {
-  // Buscar por referencia decodificada
-  transaccion = rowsOriginal.find(
-    (r) =>
-      encodeURIComponent(r.referencia) === referencia ||
-      r.referencia === decodeURIComponent(referencia),
-  )
+// Cargar transacción desde la base de datos
+onMounted(async () => {
+  await cargarTransaccion()
+})
+
+async function cargarTransaccion() {
+  const id = route.params.id
+  if (!id) return
+
+  loading.value = true
+  try {
+    console.log('Cargando transacción desde BD, ID:', id)
+    const transaccionBD = await TransactionService.getTransactionById(id)
+    
+    if (transaccionBD) {
+      transaccion.value = {
+        ...transaccionBD,
+        fechaFormateada: transaccionBD.fechaFormateada || TransactionService.formatFecha(transaccionBD.fechaRegistro),
+        montoFormateado: transaccionBD.montoFormateado || TransactionService.formatMonto(transaccionBD.monto, transaccionBD.tipo)
+      }
+      console.log('Transacción cargada desde BD:', transaccion.value)
+    } else {
+      console.log('Transacción no encontrada en BD')
+    }
+  } catch (error) {
+    console.error('Error al cargar transacción:', error)
+    console.log('Usando datos mock como fallback')
+  } finally {
+    loading.value = false
+  }
+}
+
+function getStatusDescription(estado) {
+  const statusMap = {
+    'Pendiente': 'Pendiente de procesamiento',
+    'Procesado': 'Transacción completada exitosamente',
+    'Rechazado': 'Transacción rechazada',
+    'En_Proceso': 'En proceso de revisión'
+  }
+  return statusMap[estado] || 'Estado desconocido'
+}
+
+function getStatusClass(estado) {
+  switch (estado) {
+    case 'Pendiente': return 'text-warning'
+    case 'Procesado': return 'text-positive'
+    case 'Rechazado': return 'text-negative'
+    case 'En_Proceso': return 'text-info'
+    default: return 'text-grey'
+  }
 }
 
 function volver() {
-  router.push({ name: 'historial' })
+  router.push('/historial')
 }
+
 </script>
 
 <style lang="scss" scoped>

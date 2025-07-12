@@ -82,33 +82,10 @@
           @click="goHistorial"
           active-class="q-tab--active"
         />
-        <q-route-tab to="/notificaciones" label="Notificaciones" />
-
-        <!-- Panel de Administración -->
-        <q-btn-dropdown
-          flat
-          dense
-          label="Panel de Administración"
-          color="white"
-          menu-anchor="bottom left"
-          menu-self="top left"
-        >
-          <q-list style="min-width: 200px">
-            <q-item clickable v-ripple :to="{ name: 'admin-validar-comprobantes' }">
-              <q-item-section>Validar Comprobantes</q-item-section>
-            </q-item>
-            <q-item clickable v-ripple :to="{ name: 'reportes' }">
-              <q-item-section>Generar Reportes</q-item-section>
-            </q-item>
-            <q-item clickable v-ripple :to="{ name: 'admin-asignar-roles' }">
-              <q-item-section>Asignar Roles</q-item-section>
-            </q-item>
-            <q-item clickable v-ripple :to="{ name: 'admin-eliminar-usuario' }">
-              <q-item-section>Eliminar Usuario</q-item-section>
-            </q-item>
-          </q-list>
-        </q-btn-dropdown>
-
+        <q-route-tab v-if="isAdmin" to="/validaciones" label="Validaciones" />
+        <q-route-tab v-if="isAdmin" to="/admin/fondos" label="Gestión Fondos" />
+        <q-route-tab v-if="isAdmin" to="/mantenimiento" label="Mantenimiento" />
+        <q-route-tab v-if="isAdmin" to="/reportes" label="Reportes" />
         <q-route-tab to="/logout" label="Cerrar sesión" />
       </q-tabs>
     </div>
