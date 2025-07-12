@@ -88,6 +88,11 @@ const routes = [
         name: 'logout',
         component: () => import('src/modules/auth/pages/LogoutPage.vue'),
       },
+      {
+        path: 'validaciones',
+        name: 'validaciones',
+        component: () => import('src/modules/admin/pages/ValidacionesPage.vue'),
+      },
     ],
   },
 
